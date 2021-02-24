@@ -1,9 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import reportWebVitals from './reportWebVitals';
+// import reportWebVitals from './reportWebVitals';
+import {BrowserRouter as Router, Route} from "react-router-dom";
+
+// Components 
+import Landing from "./components/Landing/Landing"
 
 ReactDOM.render(
-    <div></div>,
+    <Router>
+      <Route path="/" exact component={Landing}/>
+    </Router>,
   document.getElementById('root')
 );
 
