@@ -1,0 +1,65 @@
+#root {
+    background: #ee9acc;
+}
+
+main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+h1 {
+    font-family: 'Lobster', cursive;
+    color: #fee440;
+        font-size: 48px;
+}
+
+form {
+    margin: 25px;
+
+    label, input {
+        display: block;
+        min-width: 30vw;
+    }
+
+    
+
+    input, input:focus {
+        margin-top: 5px;
+        margin-bottom: 10px;
+        padding: 5px 15px;
+        border: none;
+        border-radius: 20px;
+        outline: none;
+        background: none;
+        border-bottom: 3px solid #9b5de5;
+        color: white;
+        font-size: 16px;
+    }
+
+    input[type=submit] {
+        margin: 10px 0;
+        padding: 8px 0;
+        background: #9b5de5;
+        color: #fee440;
+        font-size: 22px;
+        display: grid;
+    }
+
+    input[type=submit]:hover {
+        cursor: pointer;
+    }
+
+    .form-error {
+        text-align: center;
+        color: #9b5de5;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    
+}

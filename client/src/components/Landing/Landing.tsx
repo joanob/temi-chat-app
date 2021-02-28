@@ -23,14 +23,10 @@ export default function Landing() {
             </header>
             <main>
                 <section>
-                    <article>
                         <h1>Temi</h1>
                         <h2>Comunícate de forma privada y segura</h2>
-                    </article>
-                    <article>
                         <Link to="/login">Iniciar sesión</Link>
                         <Link to="/signup">Regístrate</Link>
-                    </article>
                 </section>
             </main>
             <footer>

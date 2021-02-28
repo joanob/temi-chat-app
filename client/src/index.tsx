@@ -5,10 +5,14 @@ import {BrowserRouter as Router, Route} from "react-router-dom";
 
 // Components 
 import Landing from "./components/Landing/Landing"
+import Signup from "./components/UserForms/Signup"
+import Login from "./components/UserForms/Login"
 
 ReactDOM.render(
     <Router>
       <Route path="/" exact component={Landing}/>
+      <Route path="/signup" exact component={Signup}/>
+      <Route path="/login" exact component={Login}/>
     </Router>,
   document.getElementById('root')
 );

@@ -17,16 +17,11 @@ main section:first-of-type {
     height: 100vh;
     padding: 20px;
     text-align: center;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
 
-    article {
-        height: inherit;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
 
     h1 {
         font-family: 'Lobster', cursive;
@@ -37,14 +32,9 @@ main section:first-of-type {
 
     a {
         display: block;
-
-    }
-
-    a {
-        display: block;
         align-self: center;
-        width: 25vw;
-        margin: 5vh 0;
+        width: 25vw;    
+        margin-top: 30px;
         padding: 10px 50px;
         border-radius: 50px;
         border: none;
