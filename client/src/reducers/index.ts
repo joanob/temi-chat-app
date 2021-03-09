@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import {Contact, Notification} from "../interfaces"
 
 const user = (state:Contact = null, action:any) => {
-    let user = action.payload.user
+    let user = action.payload?.user
     switch (action.key) {
         case "LOGGED_IN":
             return {id: user.id, username: user.username, profilePic: user.profilePic, profileBio: user.profileBio}

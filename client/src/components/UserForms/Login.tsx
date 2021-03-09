@@ -1,4 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
+import axios from "axios"
+import WS from "../../Websocket"
 
 // Styles
 import "./UserForms.scss"
@@ -7,6 +9,7 @@ export default function Login() {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [formError, setFormError] = useState("")
+    const ws = useContext(WS)
 
     const onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {setUsername(e.target.value)}
 
@@ -14,6 +17,10 @@ export default function Login() {
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault()
+        axios.post("http://localhost:8080/login", JSON.stringify({username, pass: password}))
+        .then(res => {
+            ws.openWS(res.data)
+        })
     }
 
     return (
@@ -24,7 +31,7 @@ export default function Login() {
                <label htmlFor="username">Nombre de usuario</label>
                <input type="text" id="username" value={username} onChange={onUsernameChange} autoFocus />
                <label htmlFor="password">Contraseña</label>
-               <input type="password" id="username" value={password} onChange={onPasswordChange} />
+               <input type="password" id="password" value={password} onChange={onPasswordChange} />
                <input type="submit" value="Iniciar sesión" />
            </form>
         </main>

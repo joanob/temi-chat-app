@@ -4,18 +4,19 @@ import { wsMessage } from './actions'
 
 const WebSocketContext = createContext(null)
 
-export { WebSocketContext }
+export default WebSocketContext 
 
-export default (props:any) => {
+// eslint-disable-next-line import/no-anonymous-default-export
+export const WS = (props:any) => {
     let socket:WebSocket = null;
     
     const dispatch = useDispatch()
 
     const openWS = (token:string) => {
         if (socket === null) {
-            socket = new WebSocket("ws://localhost:3000/ws/"+token)
-            socket.onopen = ev => {
-                // 
+            socket = new WebSocket("ws://localhost:8080/ws/"+token) 
+            socket.onopen = () => {
+                console.log("Connected!");
             }
             socket.onmessage = ev => {
                 let msg = JSON.parse(ev.data)

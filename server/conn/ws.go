@@ -1,6 +1,7 @@
 package conn
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -20,9 +21,10 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 	delete(tokens, token)
 	// Upgrade connection
 	upgrader := websocket.Upgrader{}
+	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		w.WriteHeader(500)
+		fmt.Println(err.Error())
 		return
 	}
 	defer c.Close()

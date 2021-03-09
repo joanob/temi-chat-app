@@ -1,6 +1,10 @@
 package conn
 
-import "database/sql"
+import (
+	"database/sql"
+
+	_ "github.com/go-sql-driver/mysql"
+)
 
 var Conn *sql.DB
 
