@@ -16,7 +16,6 @@ export const WS = (props:any) => {
         if (socket === null) {
             socket = new WebSocket("ws://localhost:8080/ws/"+token) 
             socket.onopen = () => {
-                console.log("Connected!");
             }
             socket.onmessage = ev => {
                 let msg = JSON.parse(ev.data)

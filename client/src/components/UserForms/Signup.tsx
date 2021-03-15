@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import {useHistory} from "react-router"
 
 // Styles
-import "./UserForms.scss"
+import styles from "./UserForms.module.scss"
 
 export default function SignUp() {
     const [username, setUsername] = useState("")
@@ -43,7 +43,7 @@ export default function SignUp() {
     }
 
     return (
-        <main>
+        <main className={styles.main}>
            <h1>Registrarse</h1> 
            <form onSubmit={onSubmit}>
            {formError === "" ? null : <label className="form-error">{formError}</label>}

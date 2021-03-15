@@ -6,8 +6,9 @@ import { Contact } from "../interfaces";
 export const wsMessage = (msg: any, dispatch:any) => {
     switch (msg.type) {
         case "LOGGED_IN":
-            let payload = msg.payload;
-            dispatch({type: "LOGGED_IN", id: payload.id})
+            let {id, username, profilePic, profileBio, signupDate} = msg.payload;
+            let user = {id, username, profilePic: profilePic.String, profileBio: profileBio.String, signupDate }
+            dispatch({type: "LOGGED_IN", user})
             break
         case "CONTACT_REQUEST_APROVED":
             let contact: Contact = JSON.parse(msg.payload);

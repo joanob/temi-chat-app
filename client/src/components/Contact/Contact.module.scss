@@ -1,0 +1,39 @@
+.contact {
+    height: 60px;
+    display: grid;
+    grid-template-areas: "avatar name" "avatar message";
+    grid-template-rows: 35px 25px;
+    grid-template-columns: 60px auto;
+    align-items: center;
+    color: #fafafa;
+    border-bottom: #ec67b7 solid;
+    border-right: #ec67b7 solid;
+}
+
+.activeContact {
+    @extend .contact;
+    border-right: none;
+
+    .name {
+        color: #fee440;
+    }
+}
+
+.avatar {
+    grid-area: avatar;
+    margin: 5px;
+}
+
+.name {
+    grid-area: name;
+    font-size: 24px;
+    margin-left: 10px;
+    text-overflow: ellipsis;
+}
+
+.message {
+    grid-area: message;
+    font-size: 16px;
+    margin-left: 10px;
+    text-overflow: ellipsis;
+}

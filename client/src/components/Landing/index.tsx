@@ -2,13 +2,13 @@ import React from 'react'
 import {Link} from "react-router-dom"
 
 // Styles
-import "./Landing.scss";
+import styles from "./Landing.module.scss";
 
 export default function Landing() {
     // Mostrar solo header si estás más abajo de primera sección
     return (
         <>
-            <header>
+            <header className={styles.header}>
                 <h2>Temi</h2>
                 <nav>
                     <ul>
@@ -21,7 +21,7 @@ export default function Landing() {
                     </ul>
                 </nav>
             </header>
-            <main>
+            <main className={styles.main}>
                 <section>
                         <h1>Temi</h1>
                         <h2>Comunícate de forma privada y segura</h2>
