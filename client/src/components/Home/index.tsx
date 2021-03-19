@@ -11,19 +11,18 @@ const Home = (props:any) => {
     return (
     <>
         <header className={styles.header}>
-            <div>3 chats, 251 mensages</div>
+            <div>3 chats</div>
             <Link to="/home"><h2>Temi</h2></Link>
             <ul>
                 <li><Link to="/contacts">Contactos</Link></li>
                 <li><Link to="/settings">Ajustes</Link></li>
             </ul>
         </header>
-        <aside className={styles.aside}>
+        <main>
             <Contact />
-            <Contact isActive />
             <Contact />
-        </aside>
-        <main></main>
+            <Contact />
+        </main>
     </>
     )
 }

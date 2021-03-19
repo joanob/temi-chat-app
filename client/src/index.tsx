@@ -12,6 +12,7 @@ import Landing from "./components/Landing"
 import Signup from "./components/UserForms/Signup"
 import Login from "./components/UserForms/Login"
 import Home from "./components/Home"
+import ContactList from "./components/ContactList"
 
 ReactDOM.render(
   <Provider store={createStore(reducers)}>
@@ -20,7 +21,8 @@ ReactDOM.render(
           <Route path="/" exact component={Landing}/>
           <Route path="/signup" exact component={Signup}/>
           <Route path="/login" exact component={Login}/>
-          <ProtectedRoute path="/home" component={Home} />
+          <ProtectedRoute path="/home" exact component={Home} />
+          <ProtectedRoute path="/contacts" exact component={ContactList} />
       </Router>
     </WS>
   </Provider>,
