@@ -6,17 +6,18 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joanob/temi-chat-app/server/conn"
+	"github.com/joanob/temi-chat-app/server/db"
 	"github.com/joanob/temi-chat-app/server/user"
 	"github.com/rs/cors"
 )
 
 func main() {
 	// Open database connection
-	if err := conn.Open(); err != nil {
+	if err := db.Open(); err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	defer conn.Conn.Close()
+	defer db.Conn.Close()
 
 	// Initialize router
 	router := mux.NewRouter()

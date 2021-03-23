@@ -3,22 +3,15 @@ package user
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"github.com/joanob/temi-chat-app/server/conn"
+	"github.com/joanob/temi-chat-app/server/db"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type User struct {
-	Id         int            `json="id"`
-	Username   string         `json="username"`
-	ProfilePic sql.NullString `json="profilePic"`
-	ProfileBio sql.NullString `json="profileBio"`
-	SignupDate string         `json="signupDate"`
-}
+var Tokens = make(map[string]int)
 
 // Use username and password to log user in. Write session key
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +23,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
-	stmt, _ := conn.Conn.Prepare("SELECT id, pass FROM users WHERE username = ?")
+	stmt, _ := db.Conn.Prepare("SELECT id, pass FROM users WHERE username = ?")
 	var pass string
 	var id int
 	stmt.QueryRow(userInfo.Username).Scan(&id, &pass)
@@ -40,7 +33,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// User logged in successfully
 	token := uuid.New().String()
-	conn.AddToken(token, id)
+	Tokens[token] = id
 	json.NewEncoder(w).Encode(token)
 }
 
@@ -55,7 +48,7 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	cryptedPass, _ := bcrypt.GenerateFromPassword([]byte(userInfo.Password), bcrypt.DefaultCost)
-	_, err := conn.Conn.Exec("INSERT INTO users (username, pass, signupDate) VALUES(?, ?, CURDATE())", userInfo.Username, string(cryptedPass))
+	_, err := db.Conn.Exec("INSERT INTO users (username, pass, signupDate) VALUES(?, ?, CURDATE())", userInfo.Username, string(cryptedPass))
 	if err == nil {
 		w.WriteHeader(200)
 	} else {
@@ -69,12 +62,7 @@ func GetUserByUsernameHandler(w http.ResponseWriter, r *http.Request) {
 	if username == "" {
 		w.WriteHeader(400)
 	}
-	var user User
-	stmt, stmtErr := conn.Conn.Prepare("SELECT id, username, profilePic, profileBio, signupDate FROM users WHERE username = ?")
-	if stmtErr != nil {
-		fmt.Println(stmtErr.Error())
-	}
-	err := stmt.QueryRow(username).Scan(&user)
+	user, err := GetUserByUsername(username)
 	if err == sql.ErrNoRows {
 		w.WriteHeader(400)
 		return
