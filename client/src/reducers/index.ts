@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import {Contact, Notification} from "../interfaces"
 
+// USER REDUCER
 const user = (state:Contact = null, action:any) => {
     switch (action.type) {
         case "LOGGED_IN":
@@ -11,6 +12,7 @@ const user = (state:Contact = null, action:any) => {
     }
 }
 
+// NOTIFICATIONS REDUCER
 const notifications = (state:Notification[] = [], action: any) => {
     switch (action.type) {
         case "NOTIFICATION":
@@ -23,6 +25,7 @@ const notifications = (state:Notification[] = [], action: any) => {
     }
 }
 
+// CONTACTS REDUCER
 const contacts = (state:Contact[] = [], action: any) => {
     let payload = action.payload;
     switch (action.type) {
@@ -34,6 +37,7 @@ const contacts = (state:Contact[] = [], action: any) => {
     }
 }
 
+// CONTACT REQUESTS REDUCER
 const contactRequests = (state:Contact[] = [], action:any) => {
     let payload = action.payload;
     switch (action.type) {
@@ -46,11 +50,13 @@ const contactRequests = (state:Contact[] = [], action:any) => {
     }
 }
 
+
+// CONTACTS REQUESTED REDUCER
 const contactsRequested = (state:Contact[] = [], action:any) => {
     let payload = action.payload;
     switch (action.type) {
         case "NEW_CONTACT_REQUESTED":
-                let contact:Contact = {id: payload.id, username:payload.username,profilePic: payload.profilePic, profileBio:payload.profileBio}
+                let contact:Contact = {id: payload.id, username: payload.username, profilePic: payload.profilePic, profileBio: payload.profileBio}
                 return [...state, contact]
         default:
             return state

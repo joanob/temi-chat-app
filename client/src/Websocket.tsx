@@ -29,11 +29,11 @@ export const WS = (props:any) => {
 
     // Send request to given username
     const sendContactRequest = (username: string) => {
-        let msg = {type: "REQUEST_CONTACT", username}
+        let msg = {type: "NEW_CONTACT_REQUESTED", payload: {username}}
+        // Server adds contact request ands sends NEW CONTACT REQUESTED. Then dispatch
         socket.send(JSON.stringify(msg));
     }
 
-    // I think there's no need to provide the actual socket
     let ws = {
         openWS,
         sendContactRequest

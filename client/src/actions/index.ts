@@ -13,16 +13,17 @@ export const wsMessage = (msg: any, dispatch:any) => {
         case "CONTACT_REQUEST_APROVED":
             let contact: Contact = JSON.parse(msg.payload);
             dispatch({type: "NEW_CONTACT", payload: contact});
-            dispatch({type: "NOTIFICATION", text: contact.username + " ha aceptado tu solicitud"})
+            //dispatch({type: "NOTIFICATION", text: contact.username + " ha aceptado tu solicitud"})
             break
         case "NEW_CONTACT_REQUEST":
             contact = JSON.parse(msg.payload);
             dispatch({type: "NEW_CONTACT_REQUEST", payload: contact})
-            dispatch({type: "NOTIFICATION", text: "Has recibido una solicitud de contacto"})
+            //dispatch({type: "NOTIFICATION", text: "Has recibido una solicitud de contacto"})
             break
         case "NEW_CONTACT_REQUESTED":
             contact = JSON.parse(msg.payload)
             dispatch({type: "NEW_CONTACT_REQUESTED", payload: contact})
+            // NOTIFICATION
             break
     }
 }

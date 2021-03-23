@@ -15,7 +15,8 @@ import Home from "./components/Home"
 import ContactList from "./components/ContactList"
 
 ReactDOM.render(
-  <Provider store={createStore(reducers)}>
+  <Provider store={createStore(reducers, {},
+    (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__())}>
     <WS>
       <Router>
           <Route path="/" exact component={Landing}/>

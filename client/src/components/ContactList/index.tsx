@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import axios from "axios"
+import WebSocketContext from "../../Websocket"
 
 // Components 
 import Contact from "../Contact"
@@ -53,6 +54,7 @@ const Collapsable = (props:any) => {
 const AddContactForm = () => {
     const [username, setUsername] = useState("")
     const [userExists, setUserExists] = useState(null)
+    const ws = useContext(WebSocketContext)
 
     let usernameTimeout:NodeJS.Timeout;
 
@@ -70,7 +72,7 @@ const AddContactForm = () => {
 
     const onSubmit = (e:any) => {
         e.preventDefault()
-        
+        ws.sendContactRequest(username)
     }
 
     return (
