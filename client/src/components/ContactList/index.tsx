@@ -1,6 +1,10 @@
 import React, {useState, useContext} from 'react'
+import {connect} from "react-redux"
 import axios from "axios"
 import WebSocketContext from "../../Websocket"
+
+// Interfaces
+import {Contact as CO} from "../../interfaces"
 
 // Components 
 import Contact from "../Contact"
@@ -10,8 +14,13 @@ import styles from "./ContactList.module.scss"
 import {BiArrowBack, BiPlus} from "react-icons/bi"
 import {IoMdArrowDropdown, IoMdArrowDropup} from "react-icons/io"
 
-const ContactList = () => {
+const ContactList = (props:any) => {
+    const {contacts, contactRequests, contactsRequested} = props 
+
     const [showForm, setShowForm] = useState(false)
+
+    // ALLOW ACCEPT CONTACT REQUESTS
+
     return (
         <>
             <header className={styles.header}>
@@ -24,12 +33,12 @@ const ContactList = () => {
                 <AddContactForm />
                 :
                 <main>
-                    <Collapsable title="Solicitudes" />
-                    <Collapsable title="Pendientes" />
+                    <Collapsable title="Solicitudes" contacts={contactRequests} areRequests={true} />
+                    <Collapsable title="Pendientes" contacts={contactsRequested} />
                     <section>
-                        <Contact />
-                        <Contact />
-                        <Contact />
+                        {contacts.map((contact: CO) => {
+                            return <Contact key={contact.id} contact={contact} />
+                        })}
                     </section>
                 </main>
             }
@@ -37,16 +46,19 @@ const ContactList = () => {
     )
 }
 
-export default ContactList
+export default connect((state: any)=>{
+    const {contacts, contactRequests, contactsRequested} = state
+    return {contacts, contactRequests, contactsRequested}
+})(ContactList)
 
 const Collapsable = (props:any) => {
+    const {contacts} = props
     const [collapsed, setCollapsed] = useState(true)
-    let list = [0,0,0,0]
     return (
         <section>
             <header className={styles.collapsableHeader} onClick={()=>{setCollapsed(!collapsed)}}>{props.title} {collapsed ? <IoMdArrowDropdown /> : <IoMdArrowDropup />}</header>
             {collapsed ? null : 
-            list.map(()=>{return <Contact />})}
+            contacts.map((contact: CO)=>{return <Contact key={contact.id} contact={contact} isRequest={props.areRequests} />})}
         </section>
     )
 }

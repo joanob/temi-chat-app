@@ -29,8 +29,8 @@ const notifications = (state:Notification[] = [], action: any) => {
 const contacts = (state:Contact[] = [], action: any) => {
     let payload = action.payload;
     switch (action.type) {
-        case "NEW_CONTACT":
-            let contact:Contact = {id: payload.id, username:payload.username,profilePic: payload.profilePic, profileBio:payload.profileBio}
+        case "ADD_CONTACT":
+            let contact:Contact = {id: payload.id, username: payload.username, profilePic: payload.profilePic, profileBio: payload.profileBio}
             return [...state, contact]
         default:
             return state
@@ -41,10 +41,11 @@ const contacts = (state:Contact[] = [], action: any) => {
 const contactRequests = (state:Contact[] = [], action:any) => {
     let payload = action.payload;
     switch (action.type) {
-        case "NEW_CONTACT_REQUEST":
-            let contact:Contact = {id: payload.id, username:payload.username,profilePic: payload.profilePic, profileBio:payload.profileBio}
+        case "ADD_CONTACT_REQUEST":
+            let contact:Contact = {id: payload.id, username: payload.username, profilePic: payload.profilePic, profileBio: payload.profileBio}
             return [...state, contact]
-        // TODO create list of users you sent a request
+        case "DELETE_CONTACT_REQUEST":
+            return state.filter(contact => contact.id !== payload.id)
         default:
             return state
     }
@@ -55,7 +56,7 @@ const contactRequests = (state:Contact[] = [], action:any) => {
 const contactsRequested = (state:Contact[] = [], action:any) => {
     let payload = action.payload;
     switch (action.type) {
-        case "NEW_CONTACT_REQUESTED":
+        case "ADD_CONTACT_REQUESTED":
                 let contact:Contact = {id: payload.id, username: payload.username, profilePic: payload.profilePic, profileBio: payload.profileBio}
                 return [...state, contact]
         default:

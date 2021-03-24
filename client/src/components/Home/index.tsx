@@ -19,9 +19,7 @@ const Home = (props:any) => {
             </ul>
         </header>
         <main>
-            <Contact />
-            <Contact />
-            <Contact />
+            
         </main>
     </>
     )

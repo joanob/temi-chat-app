@@ -22,6 +22,7 @@ export const WS = (props:any) => {
                 wsMessage(msg, dispatch)
             }
             socket.onclose = ev => {
+                alert("Websocket closed!")
                 dispatch({type: "NOTIFICATION", text: "Error de conexión"})
             }
         }
@@ -29,14 +30,24 @@ export const WS = (props:any) => {
 
     // Send request to given username
     const sendContactRequest = (username: string) => {
-        let msg = {type: "NEW_CONTACT_REQUESTED", payload: {username}}
+        let msg = {type: "NEW_CONTACT_REQUESTED", payload: username}
         // Server adds contact request ands sends NEW CONTACT REQUESTED. Then dispatch
         socket.send(JSON.stringify(msg));
     }
 
+    // Accept contact request
+    const acceptContactRequest = (contact: any) => {
+        let msg = {type: "ACCEPT_CONTACT_REQUEST", payload: contact}
+        socket.send(JSON.stringify(msg))
+        // Delete from requests and add to contacts
+        dispatch({type: "DELETE_CONTACT_REQUEST", payload: contact})
+        dispatch({type: "ADD_CONTACT", payload: contact})
+    }
+
     let ws = {
         openWS,
-        sendContactRequest
+        sendContactRequest,
+        acceptContactRequest
     }
 
     return (

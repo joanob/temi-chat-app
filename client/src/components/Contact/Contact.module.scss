@@ -37,3 +37,11 @@
     margin-left: 10px;
     text-overflow: ellipsis;
 }
+
+.isRequest {
+    grid-area: message;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
