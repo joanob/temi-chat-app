@@ -27,6 +27,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var pass string
 	var id int
 	stmt.QueryRow(userInfo.Username).Scan(&id, &pass)
+	stmt.Close()
 	if bcrypt.CompareHashAndPassword([]byte(pass), []byte(userInfo.Password)) != nil {
 		w.WriteHeader(401)
 		return
