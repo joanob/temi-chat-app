@@ -18,6 +18,7 @@ func GetUserById(id int) (User, error) {
 	var user User
 	stmt, err := db.Conn.Prepare("SELECT id, username, profilePic, profileBio, signupDate FROM users WHERE id = ?")
 	err = stmt.QueryRow(id).Scan(&user.Id, &user.Username, &user.ProfilePic, &user.ProfileBio, &user.SignupDate)
+	stmt.Close()
 	return user, err
 }
 
@@ -25,5 +26,6 @@ func GetUserByUsername(username string) (User, error) {
 	var user User
 	stmt, _ := db.Conn.Prepare("SELECT id, username, profilePic, profileBio, signupDate FROM users WHERE username = ?")
 	err := stmt.QueryRow(username).Scan(&user.Id, &user.Username, &user.ProfilePic, &user.ProfileBio, &user.SignupDate)
+	stmt.Close()
 	return user, err
 }

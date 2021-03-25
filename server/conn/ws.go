@@ -35,21 +35,65 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 	}
 	defer c.Close()
 	Clients[c] = userID
-	// Send user its information
-	user, err := user.GetUserById(userID)
+	// Get user information
+	u, err := user.GetUserById(userID)
 	if err != nil {
 		c.Close()
 		return
 	}
-	userJson, _ := json.Marshal(user)
-	c.WriteJSON(Message{Type: "LOGGED_IN", Payload: userJson})
+	userJson, _ := json.Marshal(u)
+	contacts := u.GetContacts()
+	contactsRequested := u.GetContactsRequested()
+	contactRequests := u.GetContactRequests()
+	// Write all data
+	data, _ := json.Marshal(struct {
+		User              user.User   `json:"user"`
+		Contacts          []user.User `json:"contacts"`
+		ContactsRequested []user.User `json:"contactsRequested"`
+		ContactRequests   []user.User `json:"contactRequests"`
+	}{User: u, Contacts: contacts, ContactsRequested: contactsRequested, ContactRequests: contactRequests})
+	c.WriteJSON(Message{Type: "LOGGED_IN", Payload: data})
 	// Listen messages
 	for {
-		var msg map[string]interface{}
-		err := c.ReadJSON(msg)
+		var msg Message
+		err := c.ReadJSON(&msg)
 		if err != nil {
+			fmt.Println(err)
 			c.Close()
+			break
 		}
-		// Handle message
+		switch msg.Type {
+		case "NEW_CONTACT_REQUESTED":
+			var contact user.User
+			// Remove quotes from beggining and end
+			contactUsername := string(msg.Payload)
+			contact, err = u.RequestContact(contactUsername[1 : len(contactUsername)-1])
+			if err == nil {
+				contactInfo, _ := json.Marshal(contact)
+				sendMessage(contact.Id, Message{Type: "NEW_CONTACT_REQUEST", Payload: userJson})
+				c.WriteJSON(Message{Type: "NEW_CONTACT_REQUESTED", Payload: contactInfo})
+			} else {
+				// ERROR
+				fmt.Println(err)
+			}
+		case "ACCEPT_CONTACT_REQUEST":
+			var contact user.User
+			json.Unmarshal(msg.Payload, &contact)
+			err = u.AcceptContactRequest(contact)
+			if err == nil {
+				sendMessage(contact.Id, Message{Type: "CONTACT_REQUEST_APROVED", Payload: userJson})
+			} else {
+				// There was an error. Notify user
+			}
+		}
+	}
+}
+
+func sendMessage(id int, msg Message) {
+	for c, userId := range Clients {
+		if userId == id {
+			c.WriteJSON(msg)
+			return
+		}
 	}
 }
