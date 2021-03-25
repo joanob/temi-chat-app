@@ -41,6 +41,7 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 		c.Close()
 		return
 	}
+	userJson, _ := json.Marshal(u)
 	contacts := u.GetContacts()
 	contactsRequested := u.GetContactsRequested()
 	contactRequests := u.GetContactRequests()
@@ -69,6 +70,7 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 			contact, err = u.RequestContact(contactUsername[1 : len(contactUsername)-1])
 			if err == nil {
 				contactInfo, _ := json.Marshal(contact)
+				sendMessage(contact.Id, Message{Type: "NEW_CONTACT_REQUEST", Payload: userJson})
 				c.WriteJSON(Message{Type: "NEW_CONTACT_REQUESTED", Payload: contactInfo})
 			} else {
 				// ERROR
@@ -78,9 +80,20 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 			var contact user.User
 			json.Unmarshal(msg.Payload, &contact)
 			err = u.AcceptContactRequest(contact)
-			if err != nil {
+			if err == nil {
+				sendMessage(contact.Id, Message{Type: "CONTACT_REQUEST_APROVED", Payload: userJson})
+			} else {
 				// There was an error. Notify user
 			}
+		}
+	}
+}
+
+func sendMessage(id int, msg Message) {
+	for c, userId := range Clients {
+		if userId == id {
+			c.WriteJSON(msg)
+			return
 		}
 	}
 }
