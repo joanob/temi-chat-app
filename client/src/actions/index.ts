@@ -13,6 +13,7 @@ export const wsMessage = (msg: any, dispatch:any) => {
         case "CONTACT_REQUEST_APROVED":
             contact = {id: payload.id, username: payload.username, profilePic: payload.profileBio.String, profileBio: payload.profileBio.String};
             dispatch({type: "ADD_CONTACT", payload: contact});
+            dispatch({type: "DELETE_CONTACT_REQUESTED", payload: contact})
             //dispatch({type: "NOTIFICATION", text: contact.username + " ha aceptado tu solicitud"})
             break
         case "NEW_CONTACT_REQUEST":

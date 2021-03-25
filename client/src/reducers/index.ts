@@ -59,6 +59,8 @@ const contactsRequested = (state:Contact[] = [], action:any) => {
         case "ADD_CONTACT_REQUESTED":
                 let contact:Contact = {id: payload.id, username: payload.username, profilePic: payload.profilePic, profileBio: payload.profileBio}
                 return [...state, contact]
+        case "DELETE_CONTACT_REQUEST":
+            return state.filter(contact => contact.id !== payload.id)
         default:
             return state
     }
