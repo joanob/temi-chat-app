@@ -5,9 +5,15 @@ import {Route, Redirect} from "react-router-dom"
 const ProtectedRoute = (props: any) => {
     const {user, ...data} = props
     
-    return user ? 
-    <Route {...data} />
-    : <Redirect to="/login" />
+    if (!user) {
+        return <Redirect to="/login" />
+    }
+    switch (user.lastChat) {
+        case 0:
+            return <div>Loading</div>
+        case 1:
+            return <Route {...data} />
+    } 
 }
 
 export default connect(

@@ -4,9 +4,11 @@ import {Contact, Notification} from "../interfaces"
 // USER REDUCER
 const user = (state:Contact = null, action:any) => {
     switch (action.type) {
+        case "LOGGING_IN":
+            return {id: 0, username: "", profilePic: "", profileBio: "", lastChat: 0}
         case "LOGGED_IN":
             let user = action.user
-            return {id: user.id, username: user.username, profilePic: user.profilePic, profileBio: user.profileBio}
+            return {id: user.id, username: user.username, profilePic: user.profilePic, profileBio: user.profileBio, lastChat: 1}
         default:
             return state
     }
@@ -59,7 +61,7 @@ const contactsRequested = (state:Contact[] = [], action:any) => {
         case "ADD_CONTACT_REQUESTED":
                 let contact:Contact = {id: payload.id, username: payload.username, profilePic: payload.profilePic, profileBio: payload.profileBio}
                 return [...state, contact]
-        case "DELETE_CONTACT_REQUEST":
+        case "DELETE_CONTACT_REQUESTED":
             return state.filter(contact => contact.id !== payload.id)
         default:
             return state

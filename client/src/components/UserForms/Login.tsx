@@ -21,8 +21,9 @@ export default function Login() {
         e.preventDefault()
         axios.post("http://localhost:8080/login", JSON.stringify({username, pass: password}))
         .then(res => {
-            ws.openWS(res.data)
-            history.push("/home")
+            ws.openWS(res.data, () => {
+                history.push("/home")
+            })
         })
     }
 

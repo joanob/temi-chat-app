@@ -12,10 +12,12 @@ export const WS = (props:any) => {
     
     const dispatch = useDispatch()
 
-    const openWS = (token:string) => {
+    const openWS = (token:string, onSuccess: any) => {
+        dispatch({type: "LOGGING_IN"})
         if (socket === null) {
             socket = new WebSocket("ws://localhost:8080/ws/"+token) 
             socket.onopen = () => {
+                onSuccess()
             }
             socket.onmessage = ev => {
                 let msg = JSON.parse(ev.data)
@@ -23,7 +25,9 @@ export const WS = (props:any) => {
             }
             socket.onclose = ev => {
                 alert("Websocket closed!")
-                dispatch({type: "NOTIFICATION", text: "Error de conexión"})
+                // Delete all user data using brute force: reloading to login
+                window.location.href = "/login"
+                //dispatch({type: "NOTIFICATION", text: "Error de conexión"})
             }
         }
     }
