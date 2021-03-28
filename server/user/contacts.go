@@ -4,19 +4,6 @@ import (
 	"github.com/joanob/temi-chat-app/server/db"
 )
 
-// Uses username to get contactID and add contact request
-// Returns User or error. Error user not found or already requested
-func (user User) RequestContact(username string) (User, error) {
-	contact, err := GetUserByUsername(username)
-	if err != nil {
-		return User{}, err
-	}
-	stmt, _ := db.Conn.Prepare("INSERT INTO contacts(user_id, contact_id, requestedDate) VALUES(?, ?, CURDATE())")
-	_, err = stmt.Exec(user.Id, contact.Id)
-	stmt.Close()
-	return contact, err
-}
-
 // Get all aproved contacts. Returns User slice
 func (user User) GetContacts() []User {
 	var contacts []User
@@ -82,9 +69,37 @@ func (user User) GetContactRequests() []User {
 	return contacts
 }
 
-// Accept contact request. Returns error if exists
+// Uses username to get contactID and add contact request
+// Returns User or error. Error user not found or already requested
+func (user User) RequestContact(username string) (User, error) {
+	contact, err := GetUserByUsername(username)
+	if err != nil {
+		return User{}, err
+	}
+	stmt, _ := db.Conn.Prepare("INSERT INTO contacts(user_id, contact_id, requestedDate) VALUES(?, ?, CURDATE())")
+	_, err = stmt.Exec(user.Id, contact.Id)
+	stmt.Close()
+	return contact, err
+}
+
+// Deletes contact request. Return error
+func (user User) DeleteContactRequested(contact User) error {
+	stmt, _ := db.Conn.Prepare("DELETE FROM contacts WHERE user_id = ? AND contact_id = ? AND relationship = 2")
+	_, err := stmt.Exec(user.Id, contact.Id)
+	stmt.Close()
+	return err
+}
+
+// Accept contact request. Returns error
 func (user User) AcceptContactRequest(contact User) error {
 	stmt, _ := db.Conn.Prepare("UPDATE contacts SET relationship = 1 WHERE user_id = ? AND contact_id = ?")
+	_, err := stmt.Exec(contact.Id, user.Id)
+	return err
+}
+
+// Reject contact request. Returns error
+func (user User) RejectContactRequest(contact User) error {
+	stmt, _ := db.Conn.Prepare("UPDATE contacts SET relationship = 3 WHERE user_id = ? AND contact_id = ?")
 	_, err := stmt.Exec(contact.Id, user.Id)
 	return err
 }

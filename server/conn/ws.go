@@ -76,12 +76,30 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 				// ERROR
 				fmt.Println(err)
 			}
+		case "DELETE_CONTACT_REQUESTED":
+			var contact user.User
+			json.Unmarshal(msg.Payload, &contact)
+			err = u.DeleteContactRequested(contact)
+			if err == nil {
+				sendMessage(contact.Id, Message{Type: "DELETED_CONTACT_REQUEST", Payload: userJson})
+			} else {
+				// There was an error. Notify user
+			}
 		case "ACCEPT_CONTACT_REQUEST":
 			var contact user.User
 			json.Unmarshal(msg.Payload, &contact)
 			err = u.AcceptContactRequest(contact)
 			if err == nil {
 				sendMessage(contact.Id, Message{Type: "CONTACT_REQUEST_APROVED", Payload: userJson})
+			} else {
+				// There was an error. Notify user
+			}
+		case "REJECT_CONTACT_REQUEST":
+			var contact user.User
+			json.Unmarshal(msg.Payload, &contact)
+			err = u.RejectContactRequest(contact)
+			if err == nil {
+				sendMessage(contact.Id, Message{Type: "CONTACT_REQUEST_REJECTED", Payload: userJson})
 			} else {
 				// There was an error. Notify user
 			}

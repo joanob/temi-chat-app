@@ -1,6 +1,7 @@
 import React, {createContext} from 'react'
 import {useDispatch} from "react-redux"
 import { wsMessage } from './actions'
+import {Contact} from "./interfaces"
 
 const WebSocketContext = createContext(null)
 
@@ -40,18 +41,31 @@ export const WS = (props:any) => {
     }
 
     // Accept contact request
-    const acceptContactRequest = (contact: any) => {
+    const acceptContactRequest = (contact: Contact) => {
         let msg = {type: "ACCEPT_CONTACT_REQUEST", payload: contact}
         socket.send(JSON.stringify(msg))
-        // Delete from requests and add to contacts
         dispatch({type: "DELETE_CONTACT_REQUEST", payload: contact})
         dispatch({type: "ADD_CONTACT", payload: contact})
+    }
+
+    const rejectContactRequest = (contact: Contact) => {
+        let msg = {type: "REJECT_CONTACT_REQUEST", payload: contact}
+        socket.send(JSON.stringify(msg))
+        dispatch({type: "DELETE_CONTACT_REQUEST", payload: contact})
+    }
+
+    const deleteContactRequested = (contact: Contact) => {
+        let msg = {type: "DELETE_CONTACT_REQUESTED", payload: contact}
+        socket.send(JSON.stringify(msg))
+        dispatch(msg)
     }
 
     let ws = {
         openWS,
         sendContactRequest,
-        acceptContactRequest
+        acceptContactRequest,
+        rejectContactRequest,
+        deleteContactRequested
     }
 
     return (

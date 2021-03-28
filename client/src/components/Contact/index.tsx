@@ -17,6 +17,16 @@ const Contact = (props:any) => {
         wsc.acceptContactRequest(contact)
     }
 
+    const rejectContactRequest = () => {
+        if (props.isRequest) {
+            // Reject request
+            wsc.rejectContactRequest(contact)
+        } else {
+            // Delete request
+            wsc.deleteContactRequested(contact)
+        }
+    }
+
     return (
         <article className={props.isRequest !== undefined ? styles.contactRequest : styles.contact}>
             <div className={styles.avatar}>
@@ -31,7 +41,7 @@ const Contact = (props:any) => {
                 </div>
             :
                 <div className={styles.requestButtons}>
-                    <BiX size={30} color="#fee440" />
+                    <BiX size={30} color="#fee440" onClick={rejectContactRequest} />
                     {props.isRequest === true ? <BiPlus size={30} color="#fee440" onClick={acceptContactRequest} /> : null}
                 </div>   
             }
