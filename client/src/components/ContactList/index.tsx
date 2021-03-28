@@ -1,5 +1,6 @@
 import React, {useState, useContext} from 'react'
 import {connect} from "react-redux"
+import {useHistory} from "react-router-dom"
 import axios from "axios"
 import WebSocketContext from "../../Websocket"
 
@@ -16,25 +17,23 @@ import {IoMdArrowDropdown, IoMdArrowDropup} from "react-icons/io"
 
 const ContactList = (props:any) => {
     const {contacts, contactRequests, contactsRequested} = props 
-
+    const history = useHistory()
     const [showForm, setShowForm] = useState(false)
-
-    // ALLOW ACCEPT CONTACT REQUESTS
 
     return (
         <>
             <header className={styles.header}>
-                <BiArrowBack size={40} color="#fafafa" />
+                <BiArrowBack size={40} color="#fafafa" onClick={()=>{history.goBack()}} />
                 <h2>Contactos</h2>
                 <BiPlus size={40} className={showForm ? styles.closeIcon : null} color="#fafafa" onClick={()=>{setShowForm(!showForm)}} />
             </header>
             {
                 showForm ?
-                <AddContactForm />
+                <AddContactForm close={()=>{setShowForm(false)}} />
                 :
                 <main>
                     <Collapsable title="Solicitudes" contacts={contactRequests} areRequests={true} />
-                    <Collapsable title="Pendientes" contacts={contactsRequested} />
+                    <Collapsable title="Pendientes" contacts={contactsRequested} areRequests={false} />
                     <section>
                         {contacts.map((contact: CO) => {
                             return <Contact key={contact.id} contact={contact} />
@@ -58,12 +57,14 @@ const Collapsable = (props:any) => {
         <section>
             <header className={styles.collapsableHeader} onClick={()=>{setCollapsed(!collapsed)}}>{props.title} {collapsed ? <IoMdArrowDropdown /> : <IoMdArrowDropup />}</header>
             {collapsed ? null : 
-            contacts.map((contact: CO)=>{return <Contact key={contact.id} contact={contact} isRequest={props.areRequests} />})}
+            contacts.map((contact: CO) => {
+                return <Contact key={contact.id} contact={contact} isRequest={props.areRequests} />
+            })}
         </section>
     )
 }
 
-const AddContactForm = () => {
+const AddContactForm = (props:any) => {
     const [username, setUsername] = useState("")
     const [userExists, setUserExists] = useState(null)
     const ws = useContext(WebSocketContext)
@@ -85,6 +86,7 @@ const AddContactForm = () => {
     const onSubmit = (e:any) => {
         e.preventDefault()
         ws.sendContactRequest(username)
+        props.close()
     }
 
     return (

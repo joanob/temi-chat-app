@@ -1,47 +1,59 @@
 .contact {
-    height: 60px;
     display: grid;
-    grid-template-areas: "avatar name" "avatar message";
     grid-template-rows: 35px 25px;
     grid-template-columns: 60px auto;
+    grid-template-areas: "avatar username" "avatar message";
     align-items: center;
     color: #fafafa;
     border-bottom: #ec67b7 solid;
-    //border-right: #ec67b7 solid;
 }
 
-.activeContact {
+.contactRequest {
     @extend .contact;
-    border-right: none;
-
-    .name {
-        color: #fee440;
-    }
+    grid-template-rows: 30px 30px;
 }
 
 .avatar {
     grid-area: avatar;
-    margin: 5px;
+    height: 60px;
+    padding: 5px;
 }
 
 .name {
-    grid-area: name;
+    grid-area: username;
+    display: flex;
+    flex-direction: row;
     font-size: 24px;
-    margin-left: 10px;
-    text-overflow: ellipsis;
+    padding: 0 10px;
+    min-width: 0;
+
+    span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 .message {
     grid-area: message;
     font-size: 16px;
     margin-left: 10px;
-    text-overflow: ellipsis;
+    min-width: 0;
+
+    span {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 }
 
-.isRequest {
-    grid-area: message;
+.requestButtons {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
+
+    svg {
+        margin-right: 10px;
+    }
 }

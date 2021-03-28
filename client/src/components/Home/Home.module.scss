@@ -1,33 +1,45 @@
 @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
 
 .header {
-    display: block;
     height: 50px;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
     padding: 0 15px;
     background: #ec67b7;
     color: white;
 
+    div, ul {
+        flex-basis: 50%;
+    }
+
+    ul {
+        margin-left: auto;
+    }
+
     h2 {
+        display: inline;
         font-family: 'Lobster', cursive;
         color: #fee440;
     }
 
     ul {
         list-style: none;
-        justify-self: flex-end;
         display: flex;
         flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
 
         li {
             margin: 0 5px;
         }
 
         a, a:hover {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
             color: white;
+            cursor: pointer;
         }
     }
 
