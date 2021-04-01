@@ -13,6 +13,7 @@ import Signup from "./components/UserForms/Signup"
 import Login from "./components/UserForms/Login"
 import Home from "./components/Home"
 import ContactList from "./components/ContactList"
+import Chat from "./components/Chat"
 
 ReactDOM.render(
   <Provider store={createStore(reducers, {},
@@ -25,6 +26,7 @@ ReactDOM.render(
           <Route path="/login" exact component={Login}/>
           <ProtectedRoute path="/home" exact component={Home} />
           <ProtectedRoute path="/contacts" exact component={ContactList} />
+          <ProtectedRoute path="/chat/:id" exact component={Chat} />
         </Switch>
       </Router>
     </WS>
