@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
+	"github.com/joanob/temi-chat-app/server/message"
 	"github.com/joanob/temi-chat-app/server/user"
 )
 
@@ -103,6 +105,24 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 			} else {
 				// There was an error. Notify user
 			}
+		case "SEND_MESSAGE":
+			inMessage := struct {
+				Text      string `json:"text"`
+				ContactId int    `json:"contactId"`
+			}{}
+			json.Unmarshal(msg.Payload, &inMessage)
+			if u.AreContacts(inMessage.ContactId) {
+				m := message.Message{SenderId: u.Id, ReceiverId: inMessage.ContactId, DateSended: time.Now()}
+				m.AddMessage()
+				if m.Id != 0 {
+					msgJson, _ := json.Marshal(m)
+					sendMessage(m.ReceiverId, Message{Type: "MESSAGE_RECEIVED", Payload: msgJson})
+				}
+			}
+		case "READ_MESSAGE":
+			var m message.Message
+			json.Unmarshal(msg.Payload, &m)
+			m.ReadMessage()
 		}
 	}
 }

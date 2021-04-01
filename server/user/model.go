@@ -29,3 +29,10 @@ func GetUserByUsername(username string) (User, error) {
 	stmt.Close()
 	return user, err
 }
+
+func (u User) AreContacts(contactId int) bool {
+	stmt, _ := db.Conn.Prepare("SELECT relationship FROM contacts WHERE user_id = ? AND contact_id = ? AND relationship = 1")
+	defer stmt.Close()
+	_, err := stmt.Exec(u.Id, contactId)
+	return err == nil
+}

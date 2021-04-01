@@ -23,3 +23,14 @@ CREATE TABLE IF NOT EXISTS contacts (
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (contact_id) REFERENCES users (id)
 );
+
+CREATE TABLE IF NOT EXISTS messages (
+    message_id INT PRIMARY KEY AUTO_INCREMENT,
+    message_text TEXT NOT NULL,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    dateSended DATETIME NOT NULL,
+    dateReceived DATETIME,
+    FOREIGN KEY (sender_id) REFERENCES users (id),
+    FOREIGN KEY (receiver_id) REFERENCES users (id)
+);
