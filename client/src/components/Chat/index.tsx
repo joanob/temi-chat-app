@@ -1,5 +1,8 @@
-import React, {useState} from 'react'
-import { useParams, useHistory } from "react-router-dom"
+import React, {useState, useContext} from 'react'
+import { useParams, useHistory, Redirect } from "react-router-dom"
+import {connect} from "react-redux"
+import WSC from "../../Websocket"
+import {Contact, Message} from "../../interfaces"
 
 // Styles
 import styles from "./Chat.module.scss"
@@ -7,9 +10,24 @@ import {BiArrowBack, BiUpArrow} from "react-icons/bi"
 
 
 const Chat = (props: any) => {
-    const params = useParams()
+    const params:any = useParams()
     const history = useHistory()
+    const wsc = useContext(WSC)
+
+    const contact:Contact = props.contacts.filter((contact:Contact) => contact.id === parseInt(params.id))[0]
+    const messages:Message[] = props.messages.filter((message:Message) => message.receiverId === contact.id || message.senderId === contact.id)
+
     const [msg, setMsg] = useState("")
+
+    const sendMessage = () => {
+        if (msg.length !== 0) {
+            wsc.sendMessage(contact.id, msg)
+        }
+    }
+
+    if (contact === undefined) {
+        return <Redirect to="/home" />    
+    }
 
     return (
         <div className={styles.chat}>
@@ -18,19 +36,21 @@ const Chat = (props: any) => {
                 <h2>Username</h2>
             </header>
             <main className={styles.messageList}>
-                <article className={styles.incommingMessage}>
-                    Hi there
-                </article>
-                <article className={styles.outcomingMessage}>
-                    Hi there
-                </article>
+                {messages.map(message => {
+                    return (<article className={message.senderId === contact.id ? styles.incommingMessage : styles.outcomingMessage}>
+                        {message.text}
+                    </article>)
+                })}
             </main>
             <footer className={styles.footer}>
                 <input type="text" value={msg} onChange={e=>{setMsg(e.target.value)}} />
-                <BiUpArrow size={30} color="#fafafa" />
+                <BiUpArrow size={30} color="#fafafa" onClick={sendMessage} />
             </footer>
         </div>
     )
 }
 
-export default Chat
+export default connect((state: any) => {
+    const {contacts, messages} = state 
+    return state
+})(Chat)

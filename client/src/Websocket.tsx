@@ -60,12 +60,19 @@ export const WS = (props:any) => {
         dispatch(msg)
     }
 
+    const sendMessage = (contactId: number, text: string) => {
+        let msg = {type: "SEND_MESSAGE", payload: {text, contactId}}
+        socket.send(JSON.stringify(msg))
+        dispatch(msg)
+    }
+
     let ws = {
         openWS,
         sendContactRequest,
         acceptContactRequest,
         rejectContactRequest,
-        deleteContactRequested
+        deleteContactRequested,
+        sendMessage
     }
 
     return (

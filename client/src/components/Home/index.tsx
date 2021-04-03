@@ -8,7 +8,6 @@ import {RiContactsFill, RiSettings3Fill} from "react-icons/ri"
 const Home = (props:any) => {
     return (
     <>
-        <Redirect to="/chat/3" />
         <header className={styles.header}>
             <div>3 chats</div>
             <h2>Temi</h2>

@@ -36,7 +36,7 @@ const ContactList = (props:any) => {
                     <Collapsable title="Pendientes" contacts={contactsRequested} areRequests={false} />
                     <section>
                         {contacts.map((contact: CO) => {
-                            return <Contact key={contact.id} contact={contact} />
+                            return <Contact key={contact.id} contact={contact} onClick={()=>{history.push("/chat/"+contact.id)}} />
                         })}
                     </section>
                 </main>

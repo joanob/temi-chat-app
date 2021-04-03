@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import {Contact, Notification} from "../interfaces"
+import {Contact, Message, Notification} from "../interfaces"
 
 // USER REDUCER
 const user = (state:Contact = null, action:any) => {
@@ -68,10 +68,23 @@ const contactsRequested = (state:Contact[] = [], action:any) => {
     }
 }
 
+// MESSAGES REDUCER 
+const messages = (state: Message[] = [], action: any) => {
+    let payload = action.payload 
+    switch (action.type) {
+        case "SEND_MESSAGE":
+            let msg: Message = {id: 0, text: payload.text, senderId: 0, receiverId: payload.contactId, dateSended: "", dateReceived: {Time: "", Valid: false}};
+                return [...state, msg]
+        default:
+            return state
+    }
+}
+
 export default combineReducers({
     user,
     notifications,
     contacts,
     contactRequests,
-    contactsRequested
+    contactsRequested,
+    messages
 })

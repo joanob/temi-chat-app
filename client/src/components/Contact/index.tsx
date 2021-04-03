@@ -28,7 +28,7 @@ const Contact = (props:any) => {
     }
 
     return (
-        <article className={props.isRequest !== undefined ? styles.contactRequest : styles.contact}>
+        <article className={props.isRequest !== undefined ? styles.contactRequest : styles.contact} onClick={props.onClick}>
             <div className={styles.avatar}>
                 {contact.profilePic !== "" ? null : <IoMdPerson size={50} color="#fafafa" />}
             </div>
