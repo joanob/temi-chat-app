@@ -117,6 +117,7 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 				if m.Id != 0 {
 					msgJson, _ := json.Marshal(m)
 					sendMessage(m.ReceiverId, Message{Type: "MESSAGE_RECEIVED", Payload: msgJson})
+					c.WriteJSON(Message{Type: "MESSAGE_SENDED", Payload: msgJson})
 				}
 			}
 		case "READ_MESSAGE":

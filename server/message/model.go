@@ -18,9 +18,8 @@ type Message struct {
 
 // Add message and set message id
 func (m *Message) AddMessage() {
-	stmt, _ := db.Conn.Prepare("INSERT INTO messages (message_text, sender_id, receiver_id, dateSended) VALUES (?, ?, ?, ?")
-	defer stmt.Close()
-	res, err := stmt.Exec(m.Text, m.SenderId, m.ReceiverId, m.DateSended)
+	stmt, err := db.Conn.Prepare("INSERT INTO messages (message_text, sender_id, receiver_id, dateSended) VALUES (?, ?, ?, ?)")
+	res, _ := stmt.Exec(m.Text, m.SenderId, m.ReceiverId, m.DateSended)
 	id, err := res.LastInsertId()
 	if err == nil {
 		m.Id = int(id)
