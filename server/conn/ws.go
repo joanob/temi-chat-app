@@ -112,7 +112,7 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 			}{}
 			json.Unmarshal(msg.Payload, &inMessage)
 			if u.AreContacts(inMessage.ContactId) {
-				m := message.Message{SenderId: u.Id, ReceiverId: inMessage.ContactId, DateSended: time.Now()}
+				m := message.Message{SenderId: u.Id, Text: inMessage.Text, ReceiverId: inMessage.ContactId, DateSended: time.Now()}
 				m.AddMessage()
 				if m.Id != 0 {
 					msgJson, _ := json.Marshal(m)
