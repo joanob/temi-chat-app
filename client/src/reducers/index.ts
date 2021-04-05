@@ -73,8 +73,16 @@ const messages = (state: Message[] = [], action: any) => {
     let payload = action.payload 
     switch (action.type) {
         case "SEND_MESSAGE":
-            let msg: Message = {id: 0, text: payload.text, senderId: 0, receiverId: payload.contactId, dateSended: "", dateReceived: {Time: "", Valid: false}};
-                return [...state, msg]
+            let msg: Message = {id: state.length * -1, text: payload.text, senderId: 0, receiverId: payload.contactId, dateSended: "", dateReceived: {Time: "", Valid: false}};
+            return [msg, ...state] // More recent first
+        case "MESSAGE_SENDED":
+            state.forEach((message, i) => {
+                if (message.receiverId === payload.receiverId && message.text === payload.text) {
+                    state[i] = payload;
+                    return state
+                }
+            })
+            return state
         default:
             return state
     }

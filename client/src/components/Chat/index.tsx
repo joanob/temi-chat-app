@@ -22,6 +22,7 @@ const Chat = (props: any) => {
     const sendMessage = () => {
         if (msg.length !== 0) {
             wsc.sendMessage(contact.id, msg)
+            setMsg("")
         }
     }
 
@@ -37,13 +38,13 @@ const Chat = (props: any) => {
             </header>
             <main className={styles.messageList}>
                 {messages.map(message => {
-                    return (<article className={message.senderId === contact.id ? styles.incommingMessage : styles.outcomingMessage}>
+                    return (<article key={message.id} className={message.senderId === contact.id ? styles.incommingMessage : styles.outcomingMessage}>
                         {message.text}
                     </article>)
                 })}
             </main>
             <footer className={styles.footer}>
-                <input type="text" value={msg} onChange={e=>{setMsg(e.target.value)}} />
+                <input type="text" value={msg} autoFocus onChange={e=>{setMsg(e.target.value)}} />
                 <BiUpArrow size={30} color="#fafafa" onClick={sendMessage} />
             </footer>
         </div>

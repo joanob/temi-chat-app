@@ -34,6 +34,9 @@ export const wsMessage = (msg: any, dispatch:any) => {
             dispatch({type: "ADD_CONTACT_REQUESTED", payload: contact})
             // NOTIFICATION
             break
+        case "MESSAGE_SENDED":
+            dispatch({type: "MESSAGE_SENDED", payload})
+            break;
     }
 }
 
