@@ -70,10 +70,10 @@ const contactsRequested = (state:Contact[] = [], action:any) => {
 
 // MESSAGES REDUCER 
 const messages = (state: Message[] = [], action: any) => {
-    let payload = action.payload 
+    let payload = action.payload, msg: Message
     switch (action.type) {
         case "SEND_MESSAGE":
-            let msg: Message = {id: state.length * -1, text: payload.text, senderId: 0, receiverId: payload.contactId, dateSended: "", dateReceived: {Time: "", Valid: false}};
+            msg = {id: state.length * -1, text: payload.text, senderId: 0, receiverId: payload.contactId, dateSended: "", dateReceived: {Time: "", Valid: false}};
             return [msg, ...state] // More recent first
         case "MESSAGE_SENDED":
             state.forEach((message, i) => {
@@ -83,6 +83,9 @@ const messages = (state: Message[] = [], action: any) => {
                 }
             })
             return state
+        case "MESSAGE_RECEIVED":
+            msg = {id: payload.id, text: payload.text, senderId: payload.senderId, receiverId: payload.receiverId, dateSended: payload.dateSended, dateReceived: {Time: "", Valid: false}};
+            return [msg, ...state]
         default:
             return state
     }

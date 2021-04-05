@@ -37,6 +37,9 @@ export const wsMessage = (msg: any, dispatch:any) => {
         case "MESSAGE_SENDED":
             dispatch({type: "MESSAGE_SENDED", payload})
             break;
+        case "MESSAGE_RECEIVED":
+            dispatch({type: "MESSAGE_RECEIVED", payload})
+            break;
     }
 }
 

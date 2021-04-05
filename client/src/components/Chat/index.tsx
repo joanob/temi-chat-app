@@ -34,7 +34,7 @@ const Chat = (props: any) => {
         <div className={styles.chat}>
             <header className={styles.header}>
                 <BiArrowBack size={40} color="#fafafa" onClick={()=>{history.goBack()}} />
-                <h2>Username</h2>
+                <h2>{contact.username}</h2>
             </header>
             <main className={styles.messageList}>
                 {messages.map(message => {
@@ -53,5 +53,5 @@ const Chat = (props: any) => {
 
 export default connect((state: any) => {
     const {contacts, messages} = state 
-    return state
+    return {contacts, messages}
 })(Chat)
