@@ -33,3 +33,18 @@ func (m Message) ReadMessage() error {
 	_, err := stmt.Exec(m.Id)
 	return err
 }
+
+// Reads all user messages. Returns message slice
+func GetUserMesssages(userId int) []Message {
+	var messages []Message
+	stmt, _ := db.Conn.Prepare("SELECT * FROM messages WHERE sender_id = ? OR receiver_id = ? ORDER BY dateSended DESC")
+	rows, _ := stmt.Query(userId, userId)
+	for rows.Next() {
+		var msg Message
+		rows.Scan(&msg.Id, &msg.Text, &msg.SenderId, &msg.ReceiverId, &msg.DateSended, &msg.DateReceived)
+		messages = append(messages, msg)
+	}
+	rows.Close()
+	stmt.Close()
+	return messages
+}

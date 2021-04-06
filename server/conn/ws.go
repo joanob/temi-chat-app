@@ -47,13 +47,15 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 	contacts := u.GetContacts()
 	contactsRequested := u.GetContactsRequested()
 	contactRequests := u.GetContactRequests()
+	messages := message.GetUserMesssages(u.Id)
 	// Write all data
 	data, _ := json.Marshal(struct {
-		User              user.User   `json:"user"`
-		Contacts          []user.User `json:"contacts"`
-		ContactsRequested []user.User `json:"contactsRequested"`
-		ContactRequests   []user.User `json:"contactRequests"`
-	}{User: u, Contacts: contacts, ContactsRequested: contactsRequested, ContactRequests: contactRequests})
+		User              user.User         `json:"user"`
+		Contacts          []user.User       `json:"contacts"`
+		ContactsRequested []user.User       `json:"contactsRequested"`
+		ContactRequests   []user.User       `json:"contactRequests"`
+		Messages          []message.Message `json:"messages"`
+	}{User: u, Contacts: contacts, ContactsRequested: contactsRequested, ContactRequests: contactRequests, Messages: messages})
 	c.WriteJSON(Message{Type: "LOGGED_IN", Payload: data})
 	// Listen messages
 	for {
