@@ -86,6 +86,8 @@ const messages = (state: Message[] = [], action: any) => {
         case "MESSAGE_RECEIVED":
             msg = {id: payload.id, text: payload.text, senderId: payload.senderId, receiverId: payload.receiverId, dateSended: payload.dateSended, dateReceived: {Time: "", Valid: false}};
             return [msg, ...state]
+        case "ADD_MESSAGE":
+            return [payload, ...state]
         default:
             return state
     }

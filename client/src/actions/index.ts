@@ -44,7 +44,7 @@ export const wsMessage = (msg: any, dispatch:any) => {
 }
 
 const loggedIn = (payload:any, dispath: any) => {
-    const {user, contacts, contactsRequested, contactRequests} = payload
+    const {user, contacts, contactsRequested, contactRequests, messages} = payload
     dispath({type: "LOGGED_IN", user})
     if (contacts) {
         contacts.forEach((contact:any) => {
@@ -59,6 +59,11 @@ const loggedIn = (payload:any, dispath: any) => {
     if (contactRequests) {
         contactRequests.forEach((contact:any) => {
             dispath({type: "ADD_CONTACT_REQUEST", payload: {id: contact.id, username: contact.username, profilePic: contact.profileBio.String, profileBio: contact.profileBio.String}})
+        });
+    }
+    if (messages) {
+        messages.forEach((message:any) => {
+            dispath({type: "ADD_MESSAGE", payload: message})
         });
     }
 }
