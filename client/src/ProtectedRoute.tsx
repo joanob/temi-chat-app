@@ -7,12 +7,10 @@ const ProtectedRoute = (props: any) => {
     
     if (!user) {
         return <Redirect to="/login" />
-    }
-    switch (user.lastChat) {
-        case 0:
-            return <div>Loading</div>
-        case 1:
-            return <Route {...data} />
+    } else if (user.id === 0) {
+        return <div>Loading</div>
+    } else {
+        return <Route {...data} />
     } 
 }
 

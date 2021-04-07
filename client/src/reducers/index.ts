@@ -1,14 +1,15 @@
-import { combineReducers } from "redux";
+import { useSelector, useDispatch, TypedUseSelectorHook } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
 import {Contact, Message, Notification} from "../interfaces"
 
 // USER REDUCER
-const user = (state:Contact = null, action:any) => {
+const user = (state: Contact = null, action: any) => {
     switch (action.type) {
         case "LOGGING_IN":
-            return {id: 0, username: "", profilePic: "", profileBio: "", lastChat: 0}
+            return {id: 0, username: "", profilePic: "", profileBio: ""}
         case "LOGGED_IN":
             let user = action.user
-            return {id: user.id, username: user.username, profilePic: user.profilePic, profileBio: user.profileBio, lastChat: 1}
+            return {id: user.id, username: user.username, profilePic: user.profilePic, profileBio: user.profileBio}
         default:
             return state
     }
@@ -93,11 +94,16 @@ const messages = (state: Message[] = [], action: any) => {
     }
 }
 
-export default combineReducers({
-    user,
-    notifications,
-    contacts,
-    contactRequests,
-    contactsRequested,
-    messages
+const store = configureStore({
+    reducer: {
+        user,
+        notifications,
+        contacts,
+        contactRequests,
+        contactsRequested,
+        messages
+    }
 })
+
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch

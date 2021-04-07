@@ -1,34 +1,52 @@
 import React, {createContext} from 'react'
-import {useDispatch} from "react-redux"
+
+// Redux
+import {useAppDispatch} from "./hooks"
 import { wsMessage } from './actions'
+
+// Interfaces
 import {Contact} from "./interfaces"
 
-const WebSocketContext = createContext(null)
+interface WSProps {
+    openWS: (token: string, onSuccess: () => void) => void,
+    sendContactRequest: (username: string) => void,
+    acceptContactRequest: (contact: Contact) => void,
+    rejectContactRequest: (contact: Contact) => void,
+    deleteContactRequested: (contact: Contact) => void,
+    sendMessage: (contactId: number, text: string) => void
+}
+
+// Context
+
+const WebSocketContext = createContext<WSProps>(null)
 
 export default WebSocketContext 
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export const WS = (props:any) => {
-    let socket:WebSocket = null;
-    
-    const dispatch = useDispatch()
+// Component
 
-    const openWS = (token:string, onSuccess: any) => {
+export const WS: React.FC = ({children}) => {
+    let socket: WebSocket = null;
+    
+    const dispatch = useAppDispatch()
+
+    const openWS = (token: string, onSuccess: () => void) => {
         dispatch({type: "LOGGING_IN"})
+
         if (socket === null) {
-            socket = new WebSocket("ws://localhost:8080/ws/"+token) 
+            socket = new WebSocket("ws://localhost:8080/ws/" + token) 
+
             socket.onopen = () => {
                 onSuccess()
             }
+
             socket.onmessage = ev => {
                 let msg = JSON.parse(ev.data)
                 wsMessage(msg, dispatch)
             }
-            socket.onclose = ev => {
-                alert("Websocket closed!")
-                // Delete all user data using brute force: reloading to login
-                window.location.href = "/login"
+
+            socket.onclose = () => {
                 //dispatch({type: "NOTIFICATION", text: "Error de conexión"})
+                window.location.href = "/login"
             }
         }
     }
@@ -36,7 +54,6 @@ export const WS = (props:any) => {
     // Send request to given username
     const sendContactRequest = (username: string) => {
         let msg = {type: "NEW_CONTACT_REQUESTED", payload: username}
-        // Server adds contact request ands sends NEW CONTACT REQUESTED. Then dispatch
         socket.send(JSON.stringify(msg));
     }
 
@@ -44,6 +61,7 @@ export const WS = (props:any) => {
     const acceptContactRequest = (contact: Contact) => {
         let msg = {type: "ACCEPT_CONTACT_REQUEST", payload: contact}
         socket.send(JSON.stringify(msg))
+
         dispatch({type: "DELETE_CONTACT_REQUEST", payload: contact})
         dispatch({type: "ADD_CONTACT", payload: contact})
     }
@@ -51,6 +69,7 @@ export const WS = (props:any) => {
     const rejectContactRequest = (contact: Contact) => {
         let msg = {type: "REJECT_CONTACT_REQUEST", payload: contact}
         socket.send(JSON.stringify(msg))
+
         dispatch({type: "DELETE_CONTACT_REQUEST", payload: contact})
     }
 
@@ -61,12 +80,12 @@ export const WS = (props:any) => {
     }
 
     const sendMessage = (contactId: number, text: string) => {
-        let msg = {type: "SEND_MESSAGE", payload: {text, contactId}}
+        let msg = {type: "SEND_MESSAGE", payload: {contactId, text}}
         socket.send(JSON.stringify(msg))
         dispatch(msg)
     }
 
-    let ws = {
+    let ws: WSProps = {
         openWS,
         sendContactRequest,
         acceptContactRequest,
@@ -77,7 +96,7 @@ export const WS = (props:any) => {
 
     return (
         <WebSocketContext.Provider value={ws}>
-            {props.children}
+            {children}
         </WebSocketContext.Provider>
     )
 }

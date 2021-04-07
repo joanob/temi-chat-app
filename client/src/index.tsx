@@ -1,11 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from "react-redux";
+
+// Redux
 import {createStore} from "redux"
+import { Provider } from "react-redux";
 import reducers from "./reducers"
-import {WS} from "./Websocket"
+
+// Router
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute"
+
+// Connection
+import {WS} from "./Websocket"
 
 // Components 
 import Landing from "./components/Landing"
