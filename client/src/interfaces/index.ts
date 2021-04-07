@@ -2,9 +2,7 @@ export interface Contact {
     id: number;
     username: string;
     profilePic: string;
-    profileBio: string;
-    lastChat?: number
-    // Use lastChat for user as a loading flag. 0 for is loading, 1 is for loaded
+    profileBio: string
 }
 
 export interface Message {
