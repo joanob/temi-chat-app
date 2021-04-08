@@ -2,9 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // Redux
-import {createStore} from "redux"
 import { Provider } from "react-redux";
-import reducers from "./reducers"
+import store from "./reducers"
 
 // Router
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
@@ -22,8 +21,7 @@ import ContactList from "./components/ContactList"
 import Chat from "./components/Chat"
 
 ReactDOM.render(
-  <Provider store={createStore(reducers, {},
-    (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__())}>
+  <Provider store={store}>
     <WS>
       <Router>
         <Switch>

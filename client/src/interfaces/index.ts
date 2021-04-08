@@ -1,8 +1,3 @@
-export interface User {
-    id: number;
-    username: string
-}
-
 export interface Contact {
     id: number;
     username: string;
@@ -20,9 +15,4 @@ export interface Message {
         Time: any,
         Valid: boolean
     }
-}
-
-export interface Notification {
-    text: string,
-    time: number
 }
