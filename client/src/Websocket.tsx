@@ -1,8 +1,8 @@
 import React, {createContext} from 'react'
 
 // Redux
-import {useAppDispatch} from "./hooks"
 import { wsMessage } from './actions'
+import { useDispatch } from "./hooks";
 
 // Interfaces
 import {Contact} from "./interfaces"
@@ -26,8 +26,8 @@ export default WebSocketContext
 
 export const WS: React.FC = ({children}) => {
     let socket: WebSocket = null;
-    
-    const dispatch = useAppDispatch()
+
+    const dispatch = useDispatch()
 
     const openWS = (token: string, onSuccess: () => void) => {
         dispatch({type: "LOGGING_IN"})

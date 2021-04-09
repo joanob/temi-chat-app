@@ -3,4 +3,4 @@ import type { RootState, AppDispatch } from '../reducers'
 
 export const useDispatch = () => dispatcher<AppDispatch>()
 
-export const useState: TypedUseSelectorHook<RootState> = useSelector
+export const useStore: TypedUseSelectorHook<RootState> = useSelector

@@ -1,4 +1,5 @@
-import { configureStore } from "@reduxjs/toolkit"
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit"
+import wsMiddleware from "../middlewares/websocket"
 
 // Reducers
 import user from "./user"
@@ -7,7 +8,6 @@ import contactRequests from "./contactRequests"
 import contactsRequested from "./contactsRequested"
 import messages from "./messages"
 
-
 const store = configureStore({
     reducer: {
         user,
@@ -15,7 +15,10 @@ const store = configureStore({
         contactRequests,
         contactsRequested,
         messages
-    }
+    },
+    middleware: [wsMiddleware(), ...getDefaultMiddleware()]
+    /* ,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(wsMiddleware) */
 })
 
 export default store

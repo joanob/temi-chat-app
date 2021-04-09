@@ -1,1 +1,1 @@
-export { useState, useDispatch} from "./useState"
+export { useStore, useDispatch} from "./useState"

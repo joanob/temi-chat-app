@@ -1,16 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 // Redux
 import { Provider } from "react-redux";
 import store from "./reducers"
-
-// Router
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
-import ProtectedRoute from "./ProtectedRoute"
-
-// Connection
-import {WS} from "./Websocket"
+import { useStore } from "./hooks"
 
 // Components 
 import Landing from "./components/Landing"
@@ -20,20 +15,32 @@ import Home from "./components/Home"
 import ContactList from "./components/ContactList"
 import Chat from "./components/Chat"
 
-ReactDOM.render(
-  <Provider store={store}>
-    <WS>
-      <Router>
+const App = () => {
+  const user = useStore(store => store.user)
+
+  return (
+    <Router>
+      {user === null || user.id === 0 ?
         <Switch>
           <Route path="/" exact component={Landing}/>
           <Route path="/signup" exact component={Signup}/>
           <Route path="/login" exact component={Login}/>
-          <ProtectedRoute path="/home" exact component={Home} />
-          <ProtectedRoute path="/contacts" exact component={ContactList} />
-          <ProtectedRoute path="/chat/:id" exact component={Chat} />
         </Switch>
+        :
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/contacts" exact component={ContactList} />
+          <Route path="/chat/:id" exact component={Chat} />
+        </Switch>
+        }
       </Router>
-    </WS>
+  )
+
+}
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
   </Provider>,
   document.getElementById('root')
 );
