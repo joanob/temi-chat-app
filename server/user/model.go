@@ -2,8 +2,10 @@ package user
 
 import (
 	"database/sql"
+	"encoding/json"
 
 	"github.com/joanob/temi-chat-app/server/db"
+	"github.com/joanob/temi-chat-app/server/message"
 )
 
 type User struct {
@@ -12,6 +14,28 @@ type User struct {
 	ProfilePic sql.NullString `json:"profilePic"`
 	ProfileBio sql.NullString `json:"profileBio"`
 	SignupDate string         `json:"signupDate"`
+}
+
+func (u User) GetAllUserInformation() []byte {
+	contacts := u.GetContacts()
+	contactsRequested := u.GetContactsRequested()
+	contactRequests := u.GetContactRequests()
+	messages := message.GetUserMesssages(u.Id)
+
+	// Parse data
+	data, _ := json.Marshal(struct {
+		User              User              `json:"user"`
+		Contacts          []User            `json:"contacts"`
+		ContactsRequested []User            `json:"contactsRequested"`
+		ContactRequests   []User            `json:"contactRequests"`
+		Messages          []message.Message `json:"messages"`
+	}{
+		User:              u,
+		Contacts:          contacts,
+		ContactsRequested: contactsRequested, ContactRequests: contactRequests,
+		Messages: messages,
+	})
+	return data
 }
 
 func GetUserById(id int) (User, error) {

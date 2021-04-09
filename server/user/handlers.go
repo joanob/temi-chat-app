@@ -11,7 +11,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var Tokens = make(map[string]int)
+var tokens = make(map[string]int)
 
 // Use username and password to log user in. Write session key
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +34,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// User logged in successfully
 	token := uuid.New().String()
-	Tokens[token] = id
+	tokens[token] = id
 	json.NewEncoder(w).Encode(token)
 }
 
@@ -70,4 +70,13 @@ func GetUserByUsernameHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	user.SignupDate = ""
 	json.NewEncoder(w).Encode(user)
+}
+
+func AuthUser(token string) int {
+	id := tokens[token]
+	if id == 0 {
+		delete(tokens, token)
+		return 0
+	}
+	return id
 }
