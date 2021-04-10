@@ -10,7 +10,7 @@ export const contactRequestsSlice = createSlice({
     initialState,
     reducers: {
         addContactRequests: (state, {payload}) => {
-            state.push(payload)
+            return [...payload, ...state]
         },
         addContactRequest: (state, {payload}) => {
             state.push(payload)

@@ -9,11 +9,11 @@ export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        loggingIn: (state) => {
-            state = {id: 0, username: "", profileBio: "", profilePic: ""}
+        loggingIn: (state, {payload}) => {
+            return {id: 0, username: "", profileBio: "", profilePic: ""}
         },
-        loggedIn: (state, action) => {
-            state = action.payload
+        loggedIn: (state, {payload}) => {
+            return {id: payload.id, username: payload.username, profilePic: payload.profilePic, profileBio: payload.profileBio}
         }
     }
 })

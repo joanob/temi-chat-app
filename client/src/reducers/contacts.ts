@@ -13,7 +13,7 @@ export const contactsSlice = createSlice({
             state.push({id: payload.id, username: payload.username, profilePic: payload.profilePic, profileBio: payload.profileBio})
         },
         addContacts: (state, {payload}) => {
-            state.push(payload)
+            return [...payload, ...state]
         }
     }
 })

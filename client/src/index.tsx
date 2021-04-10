@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 
 // Redux
 import { Provider } from "react-redux";
@@ -31,6 +31,11 @@ const App = () => {
           <Route path="/" exact component={Home} />
           <Route path="/contacts" exact component={ContactList} />
           <Route path="/chat/:id" exact component={Chat} />
+          <Route path="/login" exact component={
+            () => {
+              return <Redirect to="/" />
+            }
+          } />
         </Switch>
         }
       </Router>

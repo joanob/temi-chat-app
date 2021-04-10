@@ -1,6 +1,9 @@
 import React, {useState} from 'react'
 import axios from "axios"
+
+// Redux
 import { useDispatch } from "../../hooks"
+import { loggingIn } from "../../reducers/user"
 
 // Styles
 import styles from "./UserForms.module.scss"
@@ -23,7 +26,7 @@ export default function Login() {
         }
         axios.post("http://localhost:8080/login", JSON.stringify({username, pass: password}))
         .then(res => {
-            dispatch({type: "WS_CONNECT", payload: {token: res.data}})
+            dispatch(loggingIn({token: res.data}))
         })
     }
 
