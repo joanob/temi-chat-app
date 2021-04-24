@@ -39,14 +39,14 @@ const Contact = ({contact, onClick, isRequest}: ContactProps) => {
     return (
         <article className={isRequest !== undefined ? styles.contactRequest : styles.contact} onClick={onClick}>
             <div className={styles.avatar}>
-                {contact.profilePic["String"] || <IoMdPerson size={50} color="#fafafa" />}
+                {contact.profilePic.Valid ? contact.profilePic.String : <IoMdPerson size={50} color="#fafafa" />}
             </div>
             <div className={styles.name}>
                 <span>{contact.username}</span>
             </div>
             {isRequest === undefined ?
                 <div className={styles.message}>
-                    <span>{contact.profileBio["String"] || "Usando Temi"}</span>
+                    <span>{contact.profileBio.Valid ? contact.profileBio.String : "Usando Temi"}</span>
                 </div>
             :
                 <div className={styles.requestButtons}>

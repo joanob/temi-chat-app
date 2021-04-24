@@ -10,7 +10,7 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         loggingIn: (state, {payload}) => {
-            state.user = {id: 0, username: "", profileBio: "", profilePic: ""}
+            state.user = {id: 0, username: "", profileBio: {String: "", Valid: false}, profilePic: {String: "", Valid: false}}
         },
         loggedIn: (state, {payload}) => {
             state.user = {id: payload.id, username: payload.username, profilePic: payload.profilePic, profileBio: payload.profileBio}

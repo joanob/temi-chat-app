@@ -1,8 +1,8 @@
 export interface Contact {
     id: number;
     username: string;
-    profilePic: string;
-    profileBio: string
+    profilePic: {String: string, Valid: boolean};
+    profileBio: {String: string, Valid: boolean}
 }
 
 export interface Message {

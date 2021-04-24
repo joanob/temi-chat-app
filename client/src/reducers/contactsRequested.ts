@@ -15,8 +15,7 @@ export const contactsRequestedSlice = createSlice({
             state.list.push(...payload)
         },
         addContactRequested: (state, {payload}) => {
-            let contact: Contact = {id: payload.id, username: payload.username, profilePic: payload.profilePic?.String, profileBio: payload.profileBio?.String}
-            state.list.push(contact)
+            state.list.push(payload)
         },
         sendContactRequest: (state, {payload}) => {
             // Only sends data
