@@ -86,7 +86,7 @@ func (user User) RequestContact(username string) (User, error) {
 func (user User) DeleteContactRequested(contact User) error {
 	stmt, _ := db.Conn.Prepare("DELETE FROM contacts WHERE user_id = ? AND contact_id = ? AND relationship = 2")
 	_, err := stmt.Exec(user.Id, contact.Id)
-	stmt.Close()
+	defer stmt.Close()
 	return err
 }
 

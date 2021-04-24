@@ -8,14 +8,14 @@ import (
 
 func newContactRequested(u *user.User, payload []byte) user.User {
 	var msg struct {
-		contactName string `json:"contactName"`
+		ContactName string `json:"contactName"`
 	}
 	err := json.Unmarshal(payload, &msg)
 	if err != nil {
 		return user.User{}
 	}
 	var contact user.User
-	contact, _ = u.RequestContact(msg.contactName)
+	contact, _ = u.RequestContact(msg.ContactName)
 	return contact
 }
 

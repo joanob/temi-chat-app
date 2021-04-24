@@ -36,7 +36,6 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 		return
 	}
-	defer conn.Close()
 
 	// User is connected
 	Clients[userId] = conn
@@ -49,46 +48,49 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 
 	// Listen messages
 	go func() {
-		// Read messages
-		var msg Message
-		err := conn.ReadJSON(&msg)
-		if err != nil {
-			// Connection was closed
-			delete(Clients, userId)
-			conn.Close()
-			return
-		}
+		for {
+			// Read messages
+			var msg Message
+			err := conn.ReadJSON(&msg)
+			if err != nil {
+				fmt.Println(err.Error())
+				// Connection was closed
+				delete(Clients, userId)
+				conn.Close()
+				return
+			}
 
-		// Process messages
-		switch msg.Type {
-		case "NEW_CONTACT_REQUESTED":
-			contact := newContactRequested(&u, msg.Payload)
-			contactInfo, _ := json.Marshal(contact)
-			sendMessage(contact.Id, Message{Type: "NEW_CONTACT_REQUEST", Payload: userJSON})
-			conn.WriteJSON(Message{Type: "NEW_CONTACT_REQUESTED", Payload: contactInfo})
-		case "DELETE_CONTACT_REQUESTED":
-			contactId := deleteContactRequested(&u, msg.Payload)
-			if contactId != 0 {
-				sendMessage(contactId, Message{Type: "DELETED_CONTACT_REQUEST", Payload: userJSON})
+			// Process messages
+			switch msg.Type {
+			case "NEW_CONTACT_REQUESTED":
+				contact := newContactRequested(&u, msg.Payload)
+				contactInfo, _ := json.Marshal(contact)
+				sendMessage(contact.Id, Message{Type: "NEW_CONTACT_REQUEST", Payload: userJSON})
+				conn.WriteJSON(Message{Type: "NEW_CONTACT_REQUESTED", Payload: contactInfo})
+			case "DELETE_CONTACT_REQUESTED":
+				contactId := deleteContactRequested(&u, msg.Payload)
+				if contactId != 0 {
+					sendMessage(contactId, Message{Type: "DELETED_CONTACT_REQUEST", Payload: userJSON})
+				}
+			case "ACCEPT_CONTACT_REQUEST":
+				contactId := acceptContactRequest(&u, msg.Payload)
+				if contactId != 0 {
+					sendMessage(contactId, Message{Type: "CONTACT_REQUEST_APROVED", Payload: userJSON})
+				}
+			case "REJECT_CONTACT_REQUEST":
+				contactId := rejectContactRequest(&u, msg.Payload)
+				if contactId != 0 {
+					sendMessage(contactId, Message{Type: "CONTACT_REQUEST_REJECTED", Payload: userJSON})
+				}
+			case "SEND_MESSAGE":
+				contactId, msgJSON := inMessage(&u, msg.Payload)
+				sendMessage(contactId, Message{Type: "MESSAGE_RECEIVED", Payload: msgJSON})
+				conn.WriteJSON(Message{Type: "MESSAGE_SENDED", Payload: msgJSON})
+			case "READ_MESSAGE":
+				var m message.Message
+				json.Unmarshal(msg.Payload, &m)
+				m.ReadMessage()
 			}
-		case "ACCEPT_CONTACT_REQUEST":
-			contactId := acceptContactRequest(&u, msg.Payload)
-			if contactId != 0 {
-				sendMessage(contactId, Message{Type: "CONTACT_REQUEST_APROVED", Payload: userJSON})
-			}
-		case "REJECT_CONTACT_REQUEST":
-			contactId := rejectContactRequest(&u, msg.Payload)
-			if contactId != 0 {
-				sendMessage(contactId, Message{Type: "CONTACT_REQUEST_REJECTED", Payload: userJSON})
-			}
-		case "SEND_MESSAGE":
-			contactId, msgJSON := inMessage(&u, msg.Payload)
-			sendMessage(contactId, Message{Type: "MESSAGE_RECEIVED", Payload: msgJSON})
-			conn.WriteJSON(Message{Type: "MESSAGE_SENDED", Payload: msgJSON})
-		case "READ_MESSAGE":
-			var m message.Message
-			json.Unmarshal(msg.Payload, &m)
-			m.ReadMessage()
 		}
 	}()
 }
