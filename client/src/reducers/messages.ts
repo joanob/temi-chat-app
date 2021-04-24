@@ -3,22 +3,24 @@ import { createSlice } from "@reduxjs/toolkit"
 // Interfaces 
 import { Message } from "../interfaces"
 
-const initialState: Message[] = []
+const initialState: {list: Message[]} = {
+    list: []
+}
 
 export const messageSlice = createSlice({
     name: "message",
     initialState,
     reducers: {
         addMessages: (state, {payload}) => {
-            return [...payload, ...state]
+            state.list.unshift(...payload)
         },
         addMessage: (state, {payload}) => {
-            state.push(payload)
+            state.list.unshift(payload)
         },
         messageSended: (state, {payload}) => {
-            state.forEach((message, i) => {
+            state.list.forEach((message, i) => {
                 if (message.id === payload.tempId) {
-                    state[i] = {id: payload.id, text: payload.text, senderId: payload.senderId, receiverId: payload.receiverId, dateSended: payload.dateSended, dateReceived: payload.dateReceived}
+                    state.list[i] = {id: payload.id, text: payload.text, senderId: payload.senderId, receiverId: payload.receiverId, dateSended: payload.dateSended, dateReceived: payload.dateReceived}
                 }
             })
         }

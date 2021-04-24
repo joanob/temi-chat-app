@@ -1,11 +1,13 @@
-import React, {useState, useContext} from 'react'
-import {connect} from "react-redux"
+import React, {useState} from 'react'
 import {useHistory} from "react-router-dom"
 import axios from "axios"
-import WebSocketContext from "../../Websocket"
+
+// Redux 
+import { useStore, useDispatch} from "../../hooks"
+import { sendContactRequest } from "../../reducers/contactsRequested"
 
 // Interfaces
-import {Contact as CO} from "../../interfaces"
+import {Contact as IContact} from "../../interfaces"
 
 // Components 
 import Contact from "../Contact"
@@ -15,8 +17,10 @@ import styles from "./ContactList.module.scss"
 import {BiArrowBack, BiPlus} from "react-icons/bi"
 import {IoMdArrowDropdown, IoMdArrowDropup} from "react-icons/io"
 
-const ContactList = (props:any) => {
-    const {contacts, contactRequests, contactsRequested} = props 
+const ContactList = () => {
+    const contacts = useStore(store => store.contacts.list)
+    const contactRequests = useStore(store => store.contactRequests.list)
+    const contactsRequested = useStore(store => store.contactsRequested.list)
     const history = useHistory()
     const [showForm, setShowForm] = useState(false)
 
@@ -35,7 +39,7 @@ const ContactList = (props:any) => {
                     <Collapsable title="Solicitudes" contacts={contactRequests} areRequests={true} />
                     <Collapsable title="Pendientes" contacts={contactsRequested} areRequests={false} />
                     <section>
-                        {contacts.map((contact: CO) => {
+                        {contacts.map((contact: IContact) => {
                             return <Contact key={contact.id} contact={contact} onClick={()=>{history.push("/chat/"+contact.id)}} />
                         })}
                     </section>
@@ -45,29 +49,26 @@ const ContactList = (props:any) => {
     )
 }
 
-export default connect((state: any)=>{
-    const {contacts, contactRequests, contactsRequested} = state
-    return {contacts, contactRequests, contactsRequested}
-})(ContactList)
+export default ContactList
 
-const Collapsable = (props:any) => {
-    const {contacts} = props
+const Collapsable = ({title, contacts, areRequests}: {title: string, contacts: IContact[], areRequests: boolean}) => {
     const [collapsed, setCollapsed] = useState(true)
+
     return (
         <section>
-            <header className={styles.collapsableHeader} onClick={()=>{setCollapsed(!collapsed)}}>{props.title} {collapsed ? <IoMdArrowDropdown /> : <IoMdArrowDropup />}</header>
+            <header className={styles.collapsableHeader} onClick={()=>{setCollapsed(!collapsed)}}>{title} {collapsed ? <IoMdArrowDropdown /> : <IoMdArrowDropup />}</header>
             {collapsed ? null : 
-            contacts.map((contact: CO) => {
-                return <Contact key={contact.id} contact={contact} isRequest={props.areRequests} />
+            contacts.map(contact => {
+                return <Contact key={contact.id} contact={contact} isRequest={areRequests} />
             })}
         </section>
     )
 }
 
-const AddContactForm = (props:any) => {
+const AddContactForm = ({close}: {close: () => void}) => {
+    const dispatch = useDispatch()
     const [username, setUsername] = useState("")
     const [userExists, setUserExists] = useState(null)
-    const ws = useContext(WebSocketContext)
 
     let usernameTimeout:NodeJS.Timeout;
 
@@ -83,10 +84,10 @@ const AddContactForm = (props:any) => {
         }, 500)
     }
 
-    const onSubmit = (e:any) => {
+    const onSubmit = (e: any) => {
         e.preventDefault()
-        ws.sendContactRequest(username)
-        props.close()
+        dispatch(sendContactRequest({username}))
+        close()
     }
 
     return (

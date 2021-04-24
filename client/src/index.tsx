@@ -16,13 +16,13 @@ import ContactList from "./components/ContactList"
 import Chat from "./components/Chat"
 
 const App = () => {
-  const user = useStore(store => store.user)
+  const user = useStore(store => store.user.user)
 
   return (
     <Router>
       {user === null || user.id === 0 ?
         <Switch>
-          <Route path="/" exact component={Landing}/>
+          <Route path="/" exact component={Login}/>
           <Route path="/signup" exact component={Signup}/>
           <Route path="/login" exact component={Login}/>
         </Switch>

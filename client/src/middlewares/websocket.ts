@@ -4,9 +4,9 @@ import { Contact, Message } from "../interfaces"
 
 // Actions
 import { loggingIn, loggedIn } from "../reducers/user"
-import { addContacts } from "../reducers/contacts"
-import { addContactRequests } from "../reducers/contactRequests"
-import { addContactsRequested } from "../reducers/contactsRequested"
+import { addContact, addContacts } from "../reducers/contacts"
+import { addContactRequest, addContactRequests, deleteContactRequest } from "../reducers/contactRequests"
+import { addContactRequested, addContactsRequested, deleteContactRequested } from "../reducers/contactsRequested"
 import { addMessages } from "../reducers/messages"
 
 interface Action {
@@ -15,15 +15,11 @@ interface Action {
 }
 
 interface ILoggedIn {
-    type: string;
-    payload: {
         user: Contact;
         contacts: Contact[];
         contactRequests: Contact[];
         contactsRequested: Contact[];
         messages: Message[]
-
-    }
 }
 
 const socketMiddleware: any = () => {
@@ -38,14 +34,34 @@ const socketMiddleware: any = () => {
     }
 
     const onMessage = (store: any) => (e: MessageEvent) => {
-        let message: ILoggedIn = JSON.parse(e.data)
-        if (message.type === "LOGGED_IN") {
-            let {user, contacts, contactRequests, contactsRequested, messages} = message.payload
-            store.dispatch(addContacts(contacts ? contacts : []))
-            store.dispatch(addContactRequests(contactRequests ? contactRequests : []))
-            store.dispatch(addContactsRequested(contactsRequested ? contactsRequested : []))
-            store.dispatch(addMessages(messages ? messages : []))
-            store.dispatch(loggedIn(user))
+        let {type, payload}: Action = JSON.parse(e.data)
+        switch (type) {
+            case "LOGGED_IN":
+                let loggedInMsg: ILoggedIn = payload
+                store.dispatch(addContacts(loggedInMsg.contacts ? loggedInMsg.contacts : []))
+                store.dispatch(addContactRequests(loggedInMsg.contactRequests ? loggedInMsg.contactRequests : []))
+                store.dispatch(addContactsRequested(loggedInMsg.contactsRequested ? loggedInMsg.contactsRequested : []))
+                store.dispatch(addMessages(loggedInMsg.messages ? loggedInMsg.messages : []))
+                store.dispatch(loggedIn(loggedInMsg.user))
+                break;
+            case "NEW_CONTACT_REQUESTED":
+                store.dispatch(addContactRequested(payload))
+                break;
+            case "NEW_CONTACT_REQUEST":
+                store.dispatch(addContactRequest(payload))
+                break;
+            case "CONTACT_REQUEST_APROVED":
+                store.dispatch(addContact(payload))
+                store.dispatch(deleteContactRequested(payload))
+                break
+            case "CONTACT_REQUEST_REJECTED":
+                store.dispatch(deleteContactRequested(payload))
+                break
+            case "DELETED_CONTACT_REQUEST":
+                store.dispatch(deleteContactRequest(payload))
+                break
+            default:
+                break;
         }
     }
 
@@ -58,6 +74,24 @@ const socketMiddleware: any = () => {
                 socket.onopen = onOpen(store)
                 next(loggingIn({}))
                 break;
+            case "contactsRequested/sendContactRequest":
+                socket.send(JSON.stringify({type: "NEW_CONTACT_REQUESTED", payload: {contactName: payload.username}}))
+                next({type, payload})
+                break;
+            case "contacts/acceptContactRequest":
+                socket.send(JSON.stringify({type: "ACCEPT_CONTACT_REQUEST", payload: payload.contact}))
+                next(deleteContactRequest({payload: payload.contact}))
+                // Crec que si es necessari possar les dos
+                next(addContact({payload: payload.contact}))
+                break;
+            case "contactRequests/rejectContactRequest":
+                socket.send(JSON.stringify({type: "REJECT_CONTACT_REQUEST", payload: payload.contact}))
+                next({type, payload: payload.contact})
+                break
+            case "contactsRequested/deleteContactRequest":
+                socket.send(JSON.stringify({type: "DELETE_CONTACT_REQUESTED", payload: payload.contact}))
+                next({type, payload: payload.contact})
+                break
             default:
                 next({type, payload})
                 break;

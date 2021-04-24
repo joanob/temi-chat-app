@@ -1,7 +1,6 @@
 import React, {useState, useContext} from 'react'
 import { useParams, useHistory, Redirect } from "react-router-dom"
 import {connect} from "react-redux"
-import WSC from "../../Websocket"
 import {Contact, Message} from "../../interfaces"
 
 // Styles
@@ -12,7 +11,6 @@ import {BiArrowBack, BiUpArrow} from "react-icons/bi"
 const Chat = (props: any) => {
     const params:any = useParams()
     const history = useHistory()
-    const wsc = useContext(WSC)
 
     const contact:Contact = props.contacts.filter((contact:Contact) => contact.id === parseInt(params.id))[0]
     const messages:Message[] = props.messages.filter((message:Message) => message.receiverId === contact.id || message.senderId === contact.id)
@@ -21,7 +19,7 @@ const Chat = (props: any) => {
 
     const sendMessage = () => {
         if (msg.length !== 0) {
-            wsc.sendMessage(contact.id, msg)
+            //wsc.sendMessage(contact.id, msg)
             setMsg("")
         }
     }

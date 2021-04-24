@@ -1,48 +1,57 @@
-import React, {useContext} from 'react'
-import WSC from "../../Websocket"
+import React from 'react'
+
+// Redux
+import { useDispatch } from "../../hooks"
+import {acceptContactRequest as acceptAction} from "../../reducers/contacts"
+import { rejectContactRequest as rejectAction } from "../../reducers/contactRequests";
+import {deleteContactRequest} from "../../reducers/contactsRequested"
 
 // Interfaces
-import {Contact as CO} from "../../interfaces"
+import {Contact as IContact} from "../../interfaces"
 
 // Styles
 import styles from "./Contact.module.scss"
 import { IoMdPerson } from "react-icons/io"
 import { BiPlus, BiX } from "react-icons/bi"
 
-const Contact = (props:any) => {
-    const wsc = useContext(WSC)
-    const contact:CO = props.contact
+interface ContactProps {
+    key: any;
+    contact: IContact;
+    onClick?: () => void;
+    isRequest?: boolean
+}
+
+const Contact = ({contact, onClick, isRequest}: ContactProps) => {
+    const dispatch = useDispatch()
 
     const acceptContactRequest = () => {
-        wsc.acceptContactRequest(contact)
+        dispatch(acceptAction({contact}))
     }
 
     const rejectContactRequest = () => {
-        if (props.isRequest) {
-            // Reject request
-            wsc.rejectContactRequest(contact)
+        if (isRequest) {
+            dispatch(rejectAction({contact}))
         } else {
-            // Delete request
-            wsc.deleteContactRequested(contact)
+            dispatch(deleteContactRequest({contact}))
         }
     }
 
     return (
-        <article className={props.isRequest !== undefined ? styles.contactRequest : styles.contact} onClick={props.onClick}>
+        <article className={isRequest !== undefined ? styles.contactRequest : styles.contact} onClick={onClick}>
             <div className={styles.avatar}>
-                {contact.profilePic !== "" ? null : <IoMdPerson size={50} color="#fafafa" />}
+                {contact.profilePic["String"] || <IoMdPerson size={50} color="#fafafa" />}
             </div>
             <div className={styles.name}>
                 <span>{contact.username}</span>
             </div>
-            {props.isRequest === undefined ?
+            {isRequest === undefined ?
                 <div className={styles.message}>
-                    <span>{contact.profileBio || "Usando Temi"}</span>
+                    <span>{contact.profileBio["String"] || "Usando Temi"}</span>
                 </div>
             :
                 <div className={styles.requestButtons}>
                     <BiX size={30} color="#fee440" onClick={rejectContactRequest} />
-                    {props.isRequest === true ? <BiPlus size={30} color="#fee440" onClick={acceptContactRequest} /> : null}
+                    {isRequest === true ? <BiPlus size={30} color="#fee440" onClick={acceptContactRequest} /> : null}
                 </div>   
             }
         </article>

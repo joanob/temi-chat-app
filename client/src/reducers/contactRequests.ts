@@ -3,24 +3,33 @@ import { createSlice } from "@reduxjs/toolkit"
 // Interfaces 
 import { Contact } from "../interfaces"
 
-const initialState: Contact[] = []
+interface InitialState {
+    list: Contact[]
+}
+
+const initialState: InitialState = {
+    list: []
+}
 
 export const contactRequestsSlice = createSlice({
     name: "contactRequests",
     initialState,
     reducers: {
         addContactRequests: (state, {payload}) => {
-            return [...payload, ...state]
+            state.list.push(...payload)
         },
         addContactRequest: (state, {payload}) => {
-            state.push(payload)
+            state.list.push(payload)
+        },
+        rejectContactRequest: (state, {payload}) => {
+            state.list = state.list.filter(contact => contact.id !== payload.id)
         },
         deleteContactRequest: (state, {payload}) => {
-            state = state.filter(contact => contact.id !== payload.id)
+            state.list = state.list.filter(contact => contact.id !== payload.id)
         }
     }
 })
 
-export const {addContactRequests, addContactRequest, deleteContactRequest} = contactRequestsSlice.actions
+export const {addContactRequests, addContactRequest, rejectContactRequest, deleteContactRequest} = contactRequestsSlice.actions
 
 export default contactRequestsSlice.reducer

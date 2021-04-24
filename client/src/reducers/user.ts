@@ -3,17 +3,17 @@ import {createSlice } from "@reduxjs/toolkit"
 // Interfaces
 import { Contact } from "../interfaces"
 
-const initialState: Contact = null
+const initialState: {user: Contact} = {user: null}
 
 export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
         loggingIn: (state, {payload}) => {
-            return {id: 0, username: "", profileBio: "", profilePic: ""}
+            state.user = {id: 0, username: "", profileBio: "", profilePic: ""}
         },
         loggedIn: (state, {payload}) => {
-            return {id: payload.id, username: payload.username, profilePic: payload.profilePic, profileBio: payload.profileBio}
+            state.user = {id: payload.id, username: payload.username, profilePic: payload.profilePic, profileBio: payload.profileBio}
         }
     }
 })
