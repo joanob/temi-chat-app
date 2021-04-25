@@ -17,16 +17,12 @@ export const messageSlice = createSlice({
         addMessage: (state, {payload}) => {
             state.list.unshift(payload)
         },
-        messageSended: (state, {payload}) => {
-            state.list.forEach((message, i) => {
-                if (message.id === payload.tempId) {
-                    state.list[i] = {id: payload.id, text: payload.text, senderId: payload.senderId, receiverId: payload.receiverId, dateSended: payload.dateSended, dateReceived: payload.dateReceived}
-                }
-            })
-        }
+        sendMessage: (state, {payload}) => {
+            // Only sends data
+        },
     }
 })
 
-export const {addMessages, addMessage, messageSended} = messageSlice.actions
+export const {addMessages, addMessage, sendMessage} = messageSlice.actions
 
 export default messageSlice.reducer

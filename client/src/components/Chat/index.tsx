@@ -1,6 +1,11 @@
-import React, {useState, useContext} from 'react'
+import React, {useState} from 'react'
 import { useParams, useHistory, Redirect } from "react-router-dom"
-import {connect} from "react-redux"
+
+// Redux
+import {useStore, useDispatch} from "../../hooks"
+import {sendMessage} from "../../reducers/messages"
+
+// Interfaces
 import {Contact, Message} from "../../interfaces"
 
 // Styles
@@ -8,23 +13,25 @@ import styles from "./Chat.module.scss"
 import {BiArrowBack, BiUpArrow} from "react-icons/bi"
 
 
-const Chat = (props: any) => {
-    const params:any = useParams()
+const Chat = () => {
+    const params: any = useParams()
     const history = useHistory()
+    const dispatch = useDispatch()
 
-    const contact:Contact = props.contacts.filter((contact:Contact) => contact.id === parseInt(params.id))[0]
-    const messages:Message[] = props.messages.filter((message:Message) => message.receiverId === contact.id || message.senderId === contact.id)
+    const contact: Contact = useStore(store => store.contacts.list.filter(contact => contact.id === parseInt(params.id))[0])
+    
+    const messages: Message[] = useStore(store => store.messages.list.filter(message=> message.receiverId === contact.id || message.senderId === contact.id))
 
     const [msg, setMsg] = useState("")
-
-    const sendMessage = () => {
+    
+    const send = () => {
         if (msg.length !== 0) {
-            //wsc.sendMessage(contact.id, msg)
+            dispatch(sendMessage({message: {text: msg, contactId: contact.id}}))
             setMsg("")
         }
     }
 
-    if (contact === undefined) {
+    if (!contact) {
         return <Redirect to="/home" />    
     }
 
@@ -43,13 +50,10 @@ const Chat = (props: any) => {
             </main>
             <footer className={styles.footer}>
                 <input type="text" value={msg} autoFocus onChange={e=>{setMsg(e.target.value)}} />
-                <BiUpArrow size={30} color="#fafafa" onClick={sendMessage} />
+                <BiUpArrow size={30} color="#fafafa" onClick={send} />
             </footer>
         </div>
     )
 }
 
-export default connect((state: any) => {
-    const {contacts, messages} = state 
-    return {contacts, messages}
-})(Chat)
+export default Chat

@@ -7,7 +7,7 @@ import { loggingIn, loggedIn } from "../reducers/user"
 import { addContact, addContacts } from "../reducers/contacts"
 import { addContactRequest, addContactRequests, deleteContactRequest } from "../reducers/contactRequests"
 import { addContactRequested, addContactsRequested, deleteContactRequested } from "../reducers/contactsRequested"
-import { addMessages } from "../reducers/messages"
+import { addMessages, addMessage } from "../reducers/messages"
 
 interface Action {
     type: string;
@@ -60,6 +60,12 @@ const socketMiddleware: any = () => {
             case "DELETED_CONTACT_REQUEST":
                 store.dispatch(deleteContactRequest(payload))
                 break
+            case "MESSAGE_SENDED":
+                store.dispatch(addMessage(payload))
+                break
+            case "MESSAGE_RECEIVED":
+                store.dispatch(addMessage(payload))
+                break
             default:
                 break;
         }
@@ -81,7 +87,6 @@ const socketMiddleware: any = () => {
             case "contacts/acceptContactRequest":
                 socket.send(JSON.stringify({type: "ACCEPT_CONTACT_REQUEST", payload: payload.contact}))
                 next(deleteContactRequest({payload: payload.contact}))
-                // Crec que si es necessari possar les dos
                 next(addContact({payload: payload.contact}))
                 break;
             case "contactRequests/rejectContactRequest":
@@ -91,6 +96,10 @@ const socketMiddleware: any = () => {
             case "contactsRequested/deleteContactRequest":
                 socket.send(JSON.stringify({type: "DELETE_CONTACT_REQUESTED", payload: payload.contact}))
                 next({type, payload: payload.contact})
+                break
+            case "message/sendMessage":
+                socket.send(JSON.stringify({type: "SEND_MESSAGE", payload: payload.message}))
+                next({type, payload: payload.message})
                 break
             default:
                 next({type, payload})

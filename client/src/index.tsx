@@ -22,7 +22,7 @@ const App = () => {
     <Router>
       {user === null || user.id === 0 ?
         <Switch>
-          <Route path="/" exact component={Login}/>
+          <Route path="/" component={Login}/>
           <Route path="/signup" exact component={Signup}/>
           <Route path="/login" exact component={Login}/>
         </Switch>
