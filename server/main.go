@@ -19,6 +19,9 @@ func main() {
 	}
 	defer db.Conn.Close()
 
+	// Listen connections
+	conn.ListenConnections()
+
 	// Initialize router
 	router := mux.NewRouter()
 

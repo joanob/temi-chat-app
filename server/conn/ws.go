@@ -17,7 +17,38 @@ type Message struct {
 	Payload json.RawMessage `json:"payload"`
 }
 
-var Clients = make(map[int]*websocket.Conn)
+type connection struct {
+	userId int
+	ws     *websocket.Conn
+}
+
+type outcomingMessage struct {
+	userId int
+	msg    Message
+}
+
+var clients = make(map[int]*websocket.Conn)
+var newConnection = make(chan connection)
+var newMessage = make(chan outcomingMessage)
+var disconnecting = make(chan int)
+
+func ListenConnections() {
+	go func() {
+		for {
+			select {
+			case conn := <-newConnection:
+				clients[conn.userId] = conn.ws
+			case msg := <-newMessage:
+				c := clients[msg.userId]
+				if c != nil {
+					c.WriteJSON(msg.msg)
+				}
+			case userId := <-disconnecting:
+				delete(clients, userId)
+			}
+		}
+	}()
+}
 
 func OpenWS(w http.ResponseWriter, r *http.Request) {
 	// Auth user
@@ -38,7 +69,7 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// User is connected
-	Clients[userId] = conn
+	newConnection <- connection{userId, conn}
 	u, _ := user.GetUserById(userId)
 	userJSON, _ := json.Marshal(u)
 
@@ -53,9 +84,8 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 			var msg Message
 			err := conn.ReadJSON(&msg)
 			if err != nil {
-				fmt.Println(err.Error())
 				// Connection was closed
-				delete(Clients, userId)
+				disconnecting <- userId
 				conn.Close()
 				return
 			}
@@ -96,8 +126,5 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 }
 
 func sendMessage(id int, msg Message) {
-	c := Clients[id]
-	if c != nil {
-		c.WriteJSON(msg)
-	}
+	newMessage <- outcomingMessage{userId: id, msg: msg}
 }
