@@ -7,7 +7,7 @@ import { loggingIn, loggedIn } from "../reducers/user"
 import { addContact, addContacts } from "../reducers/contacts"
 import { addContactRequest, addContactRequests, deleteContactRequest } from "../reducers/contactRequests"
 import { addContactRequested, addContactsRequested, deleteContactRequested } from "../reducers/contactsRequested"
-import { addMessages, addMessage } from "../reducers/messages"
+import { loggingIn as setUserId, addMessages, addMessage } from "../reducers/messages"
 
 interface Action {
     type: string;
@@ -41,6 +41,7 @@ const socketMiddleware: any = () => {
                 store.dispatch(addContacts(loggedInMsg.contacts ? loggedInMsg.contacts : []))
                 store.dispatch(addContactRequests(loggedInMsg.contactRequests ? loggedInMsg.contactRequests : []))
                 store.dispatch(addContactsRequested(loggedInMsg.contactsRequested ? loggedInMsg.contactsRequested : []))
+                store.dispatch(setUserId(loggedInMsg.user.id))
                 store.dispatch(addMessages(loggedInMsg.messages ? loggedInMsg.messages : []))
                 store.dispatch(loggedIn(loggedInMsg.user))
                 break;

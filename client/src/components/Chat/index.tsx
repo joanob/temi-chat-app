@@ -3,7 +3,7 @@ import { useParams, useHistory, Redirect } from "react-router-dom"
 
 // Redux
 import {useStore, useDispatch} from "../../hooks"
-import {sendMessage} from "../../reducers/messages"
+import {sendMessage, readMessage} from "../../reducers/messages"
 
 // Interfaces
 import {Contact, Message} from "../../interfaces"
@@ -20,7 +20,7 @@ const Chat = () => {
 
     const contact: Contact = useStore(store => store.contacts.list.filter(contact => contact.id === parseInt(params.id))[0])
     
-    const messages: Message[] = useStore(store => store.messages.list.filter(message=> message.receiverId === contact.id || message.senderId === contact.id))
+    const messages: Message[] = useStore(store => store.messages.list[contact.id])
 
     const [msg, setMsg] = useState("")
     
@@ -34,6 +34,17 @@ const Chat = () => {
     if (!contact) {
         return <Redirect to="/home" />    
     }
+
+    // Read all unread messages 
+    messages.forEach(message => {
+        if (message.senderId === contact.id) {
+            if (!message.dateReceived.Valid) {
+                dispatch(readMessage({id: message.id, contactId: contact.id}))
+            } else {
+                return
+            }
+        }
+    })
 
     return (
         <div className={styles.chat}>

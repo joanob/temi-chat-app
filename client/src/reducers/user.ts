@@ -3,7 +3,11 @@ import {createSlice } from "@reduxjs/toolkit"
 // Interfaces
 import { Contact } from "../interfaces"
 
-const initialState: {user: Contact} = {user: null}
+interface InitialState {
+    user: Contact
+}
+
+const initialState: InitialState = {user: null}
 
 export const userSlice = createSlice({
     name: "user",

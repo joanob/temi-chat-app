@@ -3,7 +3,11 @@ import { createSlice } from "@reduxjs/toolkit"
 // Interfaces 
 import { Contact } from "../interfaces"
 
-const initialState: {list: Contact[]} = {
+interface InitialState {
+    list: Contact[]
+}
+
+const initialState: InitialState = {
     list: []
 }
 
