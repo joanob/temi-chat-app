@@ -28,7 +28,12 @@ export const messageSlice = createSlice({
             payload.forEach((message: Message) => {
                 let id = message.senderId === state.userId ? message.receiverId : message.senderId
                 if (state.list[id] === undefined) {
-                    state.list[id] = [message]    
+                    state.list[id] = []
+                }
+                let msg = message 
+                msg.dateSended = dateParser(msg.dateSended)
+                if (msg.dateReceived.Valid) {
+                    msg.dateReceived.Time = dateParser(msg.dateReceived.Time)
                 }
                 state.list[id].unshift(message)
             });
@@ -55,3 +60,7 @@ export const messageSlice = createSlice({
 export const {loggingIn, addMessages, addMessage, sendMessage, readMessage} = messageSlice.actions
 
 export default messageSlice.reducer
+
+export const dateParser = (inDate: string) : number => {
+    return new Date(inDate).getTime()
+}
