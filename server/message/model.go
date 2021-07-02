@@ -28,7 +28,7 @@ func (m *Message) AddMessage() {
 
 // Read message sets received date of message. Returns error
 func (m Message) ReadMessage() error {
-	stmt, _ := db.Conn.Prepare("UPDATE messages SET dateReceived = NOW() WHERE messageId = ?")
+	stmt, _ := db.Conn.Prepare("UPDATE messages SET dateReceived = NOW() WHERE message_id = ?")
 	defer stmt.Close()
 	_, err := stmt.Exec(m.Id)
 	return err

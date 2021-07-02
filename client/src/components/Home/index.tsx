@@ -20,12 +20,21 @@ const Home = () => {
     const contacts = useStore(store => store.contacts.list)
     const messages = useStore(store => store.messages.list)
 
-    let [unreadMessagesFromContact, chatsSorted] = sortConversations(messages, user)
+    let [unreadMessagesFromContacts, chatsSorted] = sortConversations(messages, user)
+    
+    let unreadChats = 0, unreadMessages = 0
+    for (const id in unreadMessagesFromContacts) {
+        if (unreadMessagesFromContacts[id] !== 0) {
+            unreadChats++
+            unreadMessages += unreadMessagesFromContacts[id]
+            
+        }
+    }
     
     return (
     <>
         <header className={styles.header}>
-            <div>{Object.keys(unreadMessagesFromContact).length} messages</div>
+            <div>{unreadChats !== 0 ? unreadChats + " chats, " + unreadMessages + " messages" : null}</div>
             <h2>Temi</h2>
             <ul>
                 <li>
@@ -41,8 +50,8 @@ const Home = () => {
             </ul>
         </header>
         <main>
-            {chatsSorted.map((chat:Chat) => {
-                return <Contact key={chat.contactId} contact={contacts.filter(contact => contact.id === chat.contactId)[0]} onClick={()=>{history.push("/chat/"+chat.contactId)}} />
+            {chatsSorted.map((chat: Chat) => {
+                return <Contact key={chat.contactId} contact={contacts.filter(contact => contact.id === chat.contactId)[0]} onClick={()=>{history.push("/chat/"+chat.contactId)}} unreadMessages={unreadMessagesFromContacts[chat.contactId]} />
             })}
         </main>
     </>
@@ -60,12 +69,11 @@ const sortConversations = (messages: {[key: number]: Message[]}, user: IContact)
         unreadMesages[contactId] = 0
         let contactMessages = messages[contactId]
         chats.push({contactId: contactId, lastChat: contactMessages[contactMessages.length - 1].dateSended})
-        for (let i = contactMessages.length -1; i > 0; i--) {
+        for (let i = contactMessages.length - 1; i > 0; i--) {
             if (contactMessages[i].senderId !== user.id) {
-                if (contactMessages[i].dateReceived.Valid) {
-                    break
+                if (!contactMessages[i].dateReceived.Valid) {
+                    unreadMesages[contactId]++
                 }
-                unreadMesages[contactId]++
             }
         }
     }

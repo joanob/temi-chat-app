@@ -102,6 +102,10 @@ const socketMiddleware: any = () => {
                 socket.send(JSON.stringify({type: "SEND_MESSAGE", payload: payload.message}))
                 next({type, payload: payload.message})
                 break
+            case "message/readMessage":
+                socket.send(JSON.stringify({type: "READ_MESSAGE", payload}))
+                next({type, payload})
+                break
             default:
                 next({type, payload})
                 break;

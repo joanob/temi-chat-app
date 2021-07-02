@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { useParams, useHistory, Redirect } from "react-router-dom"
 
 // Redux
@@ -27,24 +27,26 @@ const Chat = () => {
     const send = () => {
         if (msg.length !== 0) {
             dispatch(sendMessage({message: {text: msg, contactId: contact.id}}))
-            setMsg("")
         }
+        setMsg("")
     }
+
+    useEffect(() => {
+        // Read all unread messages 
+        messages.forEach(message => {
+            if (message.senderId === contact.id) {
+                if (!message.dateReceived.Valid) {
+                    dispatch(readMessage({id: message.id, contactId: contact.id}))
+                } else {
+                    return
+                }
+            }
+        })
+    }, [messages])
 
     if (!contact) {
         return <Redirect to="/home" />    
     }
-
-    // Read all unread messages 
-    messages.forEach(message => {
-        if (message.senderId === contact.id) {
-            if (!message.dateReceived.Valid) {
-                dispatch(readMessage({id: message.id, contactId: contact.id}))
-            } else {
-                return
-            }
-        }
-    })
 
     return (
         <div className={styles.chat}>

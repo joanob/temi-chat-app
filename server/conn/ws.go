@@ -92,6 +92,8 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 
 			// Process messages
 			switch msg.Type {
+
+			// CONTACT REQUESTS
 			case "NEW_CONTACT_REQUESTED":
 				contact := newContactRequested(&u, msg.Payload)
 				contactInfo, _ := json.Marshal(contact)
@@ -112,14 +114,21 @@ func OpenWS(w http.ResponseWriter, r *http.Request) {
 				if contactId != 0 {
 					sendMessage(contactId, Message{Type: "CONTACT_REQUEST_REJECTED", Payload: userJSON})
 				}
+
+			// MESSAGING
 			case "SEND_MESSAGE":
 				contactId, msgJSON := inMessage(&u, msg.Payload)
 				sendMessage(contactId, Message{Type: "MESSAGE_RECEIVED", Payload: msgJSON})
 				conn.WriteJSON(Message{Type: "MESSAGE_SENDED", Payload: msgJSON})
 			case "READ_MESSAGE":
-				var m message.Message
+				m := struct {
+					Id        int `json="id"`
+					ContactId int `json="contactId"`
+				}{}
 				json.Unmarshal(msg.Payload, &m)
-				m.ReadMessage()
+				var msg message.Message
+				msg.Id = m.Id
+				msg.ReadMessage()
 			}
 		}
 	}()

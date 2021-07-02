@@ -18,10 +18,11 @@ interface ContactProps {
     key: any;
     contact: IContact;
     onClick?: () => void;
-    isRequest?: boolean
+    isRequest?: boolean;
+    unreadMessages?: number
 }
 
-const Contact = ({contact, onClick, isRequest}: ContactProps) => {
+const Contact = ({contact, onClick, isRequest, unreadMessages}: ContactProps) => {
     const dispatch = useDispatch()
 
     const acceptContactRequest = () => {
@@ -39,6 +40,9 @@ const Contact = ({contact, onClick, isRequest}: ContactProps) => {
     return (
         <article className={isRequest !== undefined ? styles.contactRequest : styles.contact} onClick={onClick}>
             <div className={styles.avatar}>
+                {unreadMessages !== undefined && unreadMessages > 0 ?
+                <div className={styles.unreadMessages}>{unreadMessages}</div>
+                : null}
                 {contact.profilePic.Valid ? contact.profilePic.String : <IoMdPerson size={50} color="#fafafa" />}
             </div>
             <div className={styles.name}>

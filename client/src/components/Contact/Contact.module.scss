@@ -17,6 +17,13 @@
     grid-area: avatar;
     height: 60px;
     padding: 5px;
+    position: relative;
+}
+
+.unreadMessages {
+    position: absolute;
+    right: 2px;
+    top: 5px;
 }
 
 .name {
