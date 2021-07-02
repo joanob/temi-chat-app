@@ -14,8 +14,8 @@
     flex-direction: row;
     align-items: center;
     padding: 0 10px;
-    background: #ec67b7;
-    color: white;
+    color: var(--light);
+    border-bottom: var(--dark) 1px solid;
 
     h2 {
         margin-left: 10px;
@@ -36,25 +36,29 @@
 }
 
 .message {
-    background: #f5c2e0;
+    background: #fff;
     width: fit-content;
+    max-width: 80%;
     padding: 2px 5px;
-    border-radius: 10px;
+    border-radius: 8px;
+    margin-top: 4px;
+    border-color: var(--sec);
+    border-width: 3px
 }
 
 .outcomingMessage {
     @extend .message;
     margin-left: auto;
     border-bottom-right-radius: 0;
-    border-bottom: solid #ec67b7;
-    border-right: solid #ec67b7;
+    border-bottom-style: solid;
+    border-right-style: solid;
 }
 
 .incommingMessage {
     @extend .message;
     border-top-left-radius: 0;
-    border-top: solid #ec67b7;
-    border-left: solid #ec67b7;
+    border-top-style: solid;
+    border-left-style: solid;
 }
 
 .footer {

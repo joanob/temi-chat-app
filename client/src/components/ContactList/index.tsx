@@ -94,7 +94,7 @@ const AddContactForm = ({close}: {close: () => void}) => {
         <main>
             <form className={styles.contactForm} onSubmit={onSubmit}>
                 <input type="text" onChange={onUsernameChange} value={username} placeholder="Nombre de usuario" />
-                <input type="submit" value="Enviar" disabled={!userExists} />
+                <input type="submit" value="Enviar" />
             </form>
         </main>
     )

@@ -4,8 +4,8 @@
     grid-template-columns: 60px auto;
     grid-template-areas: "avatar username" "avatar message";
     align-items: center;
-    color: #fafafa;
-    border-bottom: #ec67b7 solid;
+    color: var(--light);
+    border-bottom: var(--dark) 1px solid;
 }
 
 .contactRequest {

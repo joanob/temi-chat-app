@@ -6,8 +6,9 @@
     flex-direction: row;
     align-items: center;
     padding: 0 15px;
-    background: #ec67b7;
-    color: white;
+    background: var(--main);
+    color: var(--light);
+    border-bottom: var(--sec) 2px solid;
 
     div, ul {
         flex-basis: 50%;
@@ -20,7 +21,7 @@
     h2 {
         display: inline;
         font-family: 'Lobster', cursive;
-        color: #fee440;
+        color: var(--sec);
     }
 
     ul {
@@ -38,7 +39,7 @@
             display: inline-block;
             width: 22px;
             height: 22px;
-            color: white;
+            color: var(--light);
             cursor: pointer;
         }
     }

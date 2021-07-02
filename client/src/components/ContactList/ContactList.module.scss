@@ -5,8 +5,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 10px;
-    background: #ec67b7;
-    color: white;
+    color: var(--light);
 }
 
 .closeIcon {
@@ -20,7 +19,6 @@
     align-items: center;
     justify-content: space-between;
     padding: 5px 10px;
-    background: #ec67b7;
     color: white;
 }
 
@@ -38,30 +36,25 @@
         border-radius: 20px;
         outline: none;
         background: none;
-        border-bottom: 3px solid #9b5de5;
-        color: white;
+        border-bottom: 3px solid var(--dark);
+        color: var(--light);
         font-size: 16px;
     }
 
     input::placeholder {
-        color: white;
+        color: var(--light);
     }
 
     input[type=submit] {
         margin-top: 20px;
         padding: 8px 0;
-        background: #9b5de5;
-        color: #fee440;
+        background-color: var(--light);
+        color: var(--dark);
         font-size: 22px;
         display: grid;
     }
 
     input[type=submit]:hover {
         cursor: pointer;
-    }
-
-    input[type=submit]:disabled {
-        background: #7f6c96;
-        border-bottom-color: #7f6c96;
     }
 }

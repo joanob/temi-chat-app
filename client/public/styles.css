@@ -1,3 +1,10 @@
+:root {
+    --main: #3773E1;
+    --sec: #fee440;
+    --dark: #080C14;
+    --light: #F2F2F2;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -16,5 +23,5 @@ a, a:active, a:hover {
     bottom: 0;
     left: 0;
     right: 0;
-    background: #ee9acc;
+    background: var(--main);
 }

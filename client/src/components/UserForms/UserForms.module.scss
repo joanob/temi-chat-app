@@ -9,8 +9,8 @@ align-items: center;
 
 h1 {
     font-family: 'Lobster', cursive;
-    color: #fee440;
-        font-size: 48px;
+    color: var(--sec);
+    font-size: 48px;
 }
 
 form {
@@ -19,6 +19,7 @@ form {
     label, input {
         display: block;
         min-width: 30vw;
+        color: var(--light);
     }
 
     input, input:focus {
@@ -29,7 +30,7 @@ form {
         border-radius: 20px;
         outline: none;
         background: none;
-        border-bottom: 3px solid #9b5de5;
+        border-bottom: 3px solid var(--dark);
         color: white;
         font-size: 16px;
     }
@@ -37,8 +38,8 @@ form {
     input[type=submit] {
         margin: 10px 0;
         padding: 8px 0;
-        background: #9b5de5;
-        color: #fee440;
+        background: var(--light);
+        color: var(--main);
         font-size: 22px;
         display: grid;
     }
@@ -49,7 +50,7 @@ form {
 
     .form-error {
         text-align: center;
-        color: #9b5de5;
+        color: var(--sec);
         font-weight: bold;
         font-size: 16px;
     }
