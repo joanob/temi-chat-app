@@ -68,31 +68,25 @@ const Collapsable = ({title, contacts, areRequests}: {title: string, contacts: I
 const AddContactForm = ({close}: {close: () => void}) => {
     const dispatch = useDispatch()
     const [username, setUsername] = useState("")
-    const [userExists, setUserExists] = useState(null)
-
-    let usernameTimeout:NodeJS.Timeout;
+    const [error, setError] = useState("")
 
     const onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value)
-        if (usernameTimeout) {
-            clearTimeout(usernameTimeout)
-        }
-        usernameTimeout = setTimeout(()=>{
-            axios.get("http://localhost:8080/username/"+e.target.value)
-            .then(()=>{setUserExists(true)})
-            .catch(()=>{setUserExists(false)})
-        }, 500)
     }
 
     const onSubmit = (e: any) => {
         e.preventDefault()
-        dispatch(sendContactRequest({username}))
-        close()
+        axios.get("http://localhost:8080/username/"+username).then(()=>{
+            dispatch(sendContactRequest({username}))
+            close()
+        }).catch(()=>{setError("User doesn't exist")})
     }
 
     return (
         <main>
             <form className={styles.contactForm} onSubmit={onSubmit}>
+                {error === "" ? null : 
+                <label className="form-error">{error}</label>}
                 <input type="text" onChange={onUsernameChange} value={username} placeholder="Nombre de usuario" />
                 <input type="submit" value="Enviar" />
             </form>
