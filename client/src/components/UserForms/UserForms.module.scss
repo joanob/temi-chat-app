@@ -17,38 +17,11 @@ form {
     margin: 25px;
 
     label, input {
-        display: block;
         min-width: 30vw;
-        color: var(--light);
     }
-
-    input, input:focus {
-        margin-top: 5px;
-        margin-bottom: 10px;
-        padding: 5px 15px;
-        border: none;
-        border-radius: 20px;
-        outline: none;
-        background: none;
-        border-bottom: 3px solid var(--dark);
-        color: white;
-        font-size: 16px;
-    }
-
-    input[type=submit] {
-        margin: 10px 0;
-        padding: 8px 0;
-        background: var(--light);
-        color: var(--main);
-        font-size: 22px;
-        display: grid;
-    }
-
-    input[type=submit]:hover {
-        cursor: pointer;
-    }
-
-    .form-error {
+    
+    .formError {
+        display: block;
         text-align: center;
         color: var(--sec);
         font-weight: bold;

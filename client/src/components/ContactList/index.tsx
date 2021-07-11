@@ -11,6 +11,7 @@ import {Contact as IContact} from "../../interfaces"
 
 // Components 
 import Contact from "../Contact"
+import { InputText, InputSubmit } from '../Forms'
 
 // Styles
 import styles from "./ContactList.module.scss"
@@ -70,8 +71,8 @@ const AddContactForm = ({close}: {close: () => void}) => {
     const [username, setUsername] = useState("")
     const [error, setError] = useState("")
 
-    const onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUsername(e.target.value)
+    const onUsernameChange = (username: string) => {
+        setUsername(username)
     }
 
     const onSubmit = (e: any) => {
@@ -87,8 +88,8 @@ const AddContactForm = ({close}: {close: () => void}) => {
             <form className={styles.contactForm} onSubmit={onSubmit}>
                 {error === "" ? null : 
                 <label className="form-error">{error}</label>}
-                <input type="text" onChange={onUsernameChange} value={username} placeholder="Nombre de usuario" />
-                <input type="submit" value="Enviar" />
+                <InputText label="Nombre de usuario" value={username} onChange={onUsernameChange} autofocus={true} />
+                <InputSubmit value="Enviar" />
             </form>
         </main>
     )

@@ -5,6 +5,9 @@ import axios from "axios"
 import { useDispatch } from "../../hooks"
 import { loggingIn } from "../../reducers/user"
 
+// Components
+import {InputText, InputPassword, InputSubmit} from "../Forms"
+
 // Styles
 import styles from "./UserForms.module.scss"
 
@@ -14,9 +17,9 @@ export default function Login() {
     const [formError, setFormError] = useState("")
     const dispatch = useDispatch()
 
-    const onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {setUsername(e.target.value)}
+    const onUsernameChange = (username: string) => {setUsername(username)}
 
-    const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {setPassword(e.target.value)}
+    const onPasswordChange = (password: string) => {setPassword(password)}
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -27,6 +30,8 @@ export default function Login() {
         axios.post("http://localhost:8080/login", JSON.stringify({username, pass: password}))
         .then(res => {
             dispatch(loggingIn({token: res.data}))
+        }).catch(()=>{
+            setFormError("Datos incorrectos")
         })
     }
 
@@ -34,12 +39,10 @@ export default function Login() {
         <main className={styles.main}>
            <h1>Iniciar sesión</h1> 
            <form onSubmit={onSubmit}>
-               {formError === "" ? null : <label className="form-error">{formError}</label>}
-               <label htmlFor="username">Nombre de usuario</label>
-               <input type="text" id="username" value={username} onChange={onUsernameChange} autoFocus />
-               <label htmlFor="password">Contraseña</label>
-               <input type="password" id="password" value={password} onChange={onPasswordChange} />
-               <input type="submit" value="Iniciar sesión" />
+               {formError === "" ? null : <label className={styles.formError}>{formError}</label>}
+               <InputText label="Nombre de usuario" value={username} onChange={onUsernameChange} autofocus={true} />
+               <InputPassword label="Contraseña" value={password} onChange={onPasswordChange} />
+               <InputSubmit value={"Iniciar sesión"} />
            </form>
         </main>
     )

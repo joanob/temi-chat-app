@@ -1,0 +1,43 @@
+.label, .input {
+    display: block;
+    color: var(--light);
+}
+
+.invisibleLabel {
+    color: #fff0;
+}
+
+.input, .input:focus {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    background: none;
+    border-bottom: 3px solid var(--dark);
+    color: white;
+    font-size: 16px;
+}
+
+.input::placeholder {
+    color: white;
+}
+
+.submit {
+    display: block;
+    margin: 10px auto;
+    padding: 8px;
+    border: none;
+    border-bottom: 3px solid var(--dark);
+    border-radius: 15px;
+    outline: none;
+    background: var(--light);
+    color: var(--main);
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.submit:active {
+    border-bottom-color: #fff0;
+}
