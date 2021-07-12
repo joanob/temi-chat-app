@@ -16,8 +16,8 @@ var tokens = make(map[string]int)
 // Use username and password to log user in. Write session key
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	userInfo := struct {
-		Username string `json="username"`
-		Password string `json="pass"`
+		Username string `json:"username"`
+		Password string `json:"pass"`
 	}{}
 	if err := json.NewDecoder(r.Body).Decode(&userInfo); err != nil {
 		w.WriteHeader(400)
@@ -41,8 +41,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 // Use username and password to sign user up
 func SignupHandler(w http.ResponseWriter, r *http.Request) {
 	userInfo := struct {
-		Username string `json="username"`
-		Password string `json="pass"`
+		Username string `json:"username"`
+		Password string `json:"pass"`
 	}{}
 	if err := json.NewDecoder(r.Body).Decode(&userInfo); err != nil {
 		w.WriteHeader(400)
